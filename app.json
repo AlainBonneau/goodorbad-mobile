@@ -2,6 +2,7 @@
   "expo": {
     "name": "good-or-bad-mobile",
     "slug": "good-or-bad-mobile",
+    "scheme": "goodorbad",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
