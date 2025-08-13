@@ -1,0 +1,88 @@
+// ---------- Datasource & generator ----------
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ---------- Enums ----------
+enum CardType {
+  GOOD
+  BAD
+}
+
+// ---------- Catalogue de cartes ----------
+model CardTemplate {
+  id         String       @id @default(uuid())
+  type       CardType
+  label      String
+  intensity  Int?
+  tags       String[]     // ex: ["amour","travail"]
+  locale     String?      // ex: "fr-FR"
+  weight     Float        @default(1)
+  isActive   Boolean      @default(true)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  sessionCards SessionCard[]
+}
+
+// ---------- Session (une partie = jusqu'à 5 tirages) ----------
+model Session {
+  id             String        @id @default(uuid())
+  ownerKey       String        // "user:<uuid>" ou "device:<id>"
+  seed           String        // pour rejouer/justifier l'aléatoire
+  startedAt      DateTime      @default(now())
+  finalizedAt    DateTime?
+
+  // Résultat final dénormalisé (lecture rapide)
+  finalCardId    String?
+  finalType      CardType?
+  finalLabel     String?
+  finalPickIndex Int?          // 0..4
+
+  // Relations
+  cards          SessionCard[]
+  dailyOutcome   DailyOutcome?
+
+  @@index([ownerKey, startedAt])
+}
+
+// ---------- Les 5 tirages d'une session ----------
+model SessionCard {
+  id              String        @id @default(uuid())
+  sessionId       String
+  index           Int           // 0..4
+  type            CardType      // issu du tirage 50/50
+  cardTemplateId  String?       // si tiré depuis le catalogue
+  labelSnapshot   String        // copie du label au moment du tirage
+  randomValue     Float         // trace du hasard (0..1)
+  createdAt       DateTime      @default(now())
+
+  // Relations
+  session   Session      @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  template  CardTemplate? @relation(fields: [cardTemplateId], references: [id])
+
+  @@unique([sessionId, index]) // max 5, positions uniques
+  @@index([cardTemplateId])
+}
+
+// ---------- Carte du jour (accès rapide & unicité) ----------
+model DailyOutcome {
+  id          String    @id @default(uuid())
+  ownerKey    String
+  date        DateTime  // date (UTC) du jour
+  sessionId   String    @unique
+  finalCardId String
+  finalType   CardType
+  finalLabel  String
+  createdAt   DateTime  @default(now())
+
+  session     Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([ownerKey, date]) // 1 résultat/jour par ownerKey
+  @@index([ownerKey, date])
+}
