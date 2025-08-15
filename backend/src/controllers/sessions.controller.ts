@@ -296,6 +296,7 @@ export async function finalizeSession(req: Request, res: Response) {
   }
 }
 
+// Contrôleur pour récupérer une session
 export async function getSession(req: Request, res: Response) {
   try {
     const ownerKey = String(req.header("x-owner-key") || "").trim();
@@ -373,6 +374,7 @@ export async function getSession(req: Request, res: Response) {
   }
 }
 
+// Contrôleur pour récupérer un résultat quotidien
 export async function getDailyOutcome(req: Request, res: Response) {
   try {
     const ownerKey = String(req.header("x-owner-key") || "").trim();
