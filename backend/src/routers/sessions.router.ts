@@ -4,11 +4,13 @@ import {
   drawCard,
   finalizeSession,
   getSession,
+  getDailyOutcome,
 } from "../controllers/sessions.controller.js";
 
 const router = Router();
 
 router.get("/:id", getSession);
+router.get("/:id/daily-outcome", getDailyOutcome);
 
 router.post("/", createSession);
 router.post("/:id/draw", drawCard);

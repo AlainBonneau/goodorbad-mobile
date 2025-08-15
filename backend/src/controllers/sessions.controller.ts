@@ -372,3 +372,55 @@ export async function getSession(req: Request, res: Response) {
     });
   }
 }
+
+export async function getDailyOutcome(req: Request, res: Response) {
+  try {
+    const ownerKey = String(req.header("x-owner-key") || "").trim();
+
+    if (!ownerKey) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: "OWNER_KEY_REQUIRED",
+          message: "L'en-tête x-owner-key est requis.",
+        },
+      });
+    }
+
+    const today = startOfUTCDay();
+
+    const outcome = await prisma.dailyOutcome.findUnique({
+      where: { ownerKey_date: { ownerKey, date: today } },
+      select: {
+        id: true,
+        ownerKey: true,
+        date: true,
+        sessionId: true,
+        finalCardId: true,
+        finalType: true,
+        finalLabel: true,
+        createdAt: true,
+      },
+    });
+
+    if (!outcome) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: "DAILY_OUTCOME_NOT_FOUND",
+          message: "Pas de résultat quotidien trouvé.",
+        },
+      });
+    }
+
+    return res
+      .status(200)
+      .json({ success: true, data: { dailyOutcome: outcome } });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      error: { code: "INTERNAL_ERROR", message: "Unexpected server error." },
+    });
+  }
+}
