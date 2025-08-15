@@ -2,8 +2,9 @@ import { Request, Response } from "express";
 import { prisma } from "../lib/prisma.js";
 import crypto from "crypto";
 import { CardType } from "@prisma/client";
-import pickWeighted from "../utils/function.js";
+import { pickWeighted, startOfUTCDay } from "../utils/function.js";
 
+// Contrôleur de création de session
 export async function createSession(req: Request, res: Response) {
   try {
     const ownerKey = String(req.header("x-owner-key") || "").trim();
@@ -40,6 +41,7 @@ export async function createSession(req: Request, res: Response) {
   }
 }
 
+// Contrôleur de tirage de carte
 export async function drawCard(req: Request, res: Response) {
   try {
     const ownerKey = String(req.header("x-owner-key") || "").trim();
@@ -146,6 +148,146 @@ export async function drawCard(req: Request, res: Response) {
       data: { card: newCard, remaining: 5 - (currentCount + 1) },
     });
   } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      error: { code: "INTERNAL_ERROR", message: "Unexpected server error." },
+    });
+  }
+}
+
+// Contrôleur de finalisation de session
+export async function finalizeSession(req: Request, res: Response) {
+  try {
+    const ownerKey = String(req.header("x-owner-key") || "").trim();
+
+    if (!ownerKey) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: "OWNER_KEY_REQUIRED",
+          message: "L'en-tête x-owner-key est requis.",
+        },
+      });
+    }
+
+    const sessionId = String(req.params.id);
+
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: {
+        cards: {
+          orderBy: { index: "asc" },
+          select: {
+            id: true,
+            index: true,
+            type: true,
+            labelSnapshot: true,
+            cardTemplateId: true,
+          },
+        },
+      },
+    });
+
+    if (!session) {
+      return res.status(404).json({
+        success: false,
+        error: { code: "SESSION_NOT_FOUND", message: "Session non trouvée." },
+      });
+    }
+
+    if (session.finalizedAt) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: "SESSION_FINALIZED",
+          message: "Session déjà finalisée.",
+        },
+      });
+    }
+
+    if (session.cards.length !== 5) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: "INVALID_CARD_COUNT",
+          message: "La session doit contenir exactement 5 cartes.",
+        },
+      });
+    }
+
+    const pickIndex = Math.floor(Math.random() * 5);
+    const chosen = session.cards[pickIndex];
+
+    const todayUTC = startOfUTCDay();
+
+    const [updatedSession, daily] = await prisma.$transaction([
+      prisma.session.update({
+        where: { id: sessionId },
+        data: {
+          finalizedAt: new Date(),
+          finalCardId: chosen.id,
+          finalType: chosen.type as CardType,
+          finalLabel: chosen.labelSnapshot,
+          finalPickIndex: chosen.index,
+        },
+        select: {
+          id: true,
+          ownerKey: true,
+          seed: true,
+          startedAt: true,
+          finalizedAt: true,
+          finalCardId: true,
+          finalType: true,
+          finalLabel: true,
+          finalPickIndex: true,
+        },
+      }),
+      prisma.dailyOutcome.create({
+        data: {
+          ownerKey: session.ownerKey,
+          date: todayUTC,
+          sessionId: session.id,
+          finalCardId: chosen.id,
+          finalType: chosen.type,
+          finalLabel: chosen.labelSnapshot,
+        },
+        select: {
+          id: true,
+          ownerKey: true,
+          date: true,
+          sessionId: true,
+          finalCardId: true,
+          finalType: true,
+          finalLabel: true,
+          createdAt: true,
+        },
+      }),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        final: {
+          cardId: updatedSession.finalCardId,
+          type: updatedSession.finalType,
+          label: updatedSession.finalLabel,
+          pickIndex: updatedSession.finalPickIndex,
+        },
+        session: updatedSession,
+        dailyOutcome: daily,
+      },
+    });
+  } catch (err: any) {
+    if (err?.code === "P2002") {
+      return res.status(409).json({
+        success: false,
+        error: {
+          code: "DAILY_OUTCOME_EXISTS",
+          message: "A daily outcome already exists for this owner and date.",
+        },
+      });
+    }
     console.error(err);
     return res.status(500).json({
       success: false,
