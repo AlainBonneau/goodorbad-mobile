@@ -295,3 +295,80 @@ export async function finalizeSession(req: Request, res: Response) {
     });
   }
 }
+
+export async function getSession(req: Request, res: Response) {
+  try {
+    const ownerKey = String(req.header("x-owner-key") || "").trim();
+
+    if (!ownerKey) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: "OWNER_KEY_REQUIRED",
+          message: "L'en-tête x-owner-key est requis.",
+        },
+      });
+    }
+
+    const sessionId = String(req.params.id);
+
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: {
+        cards: {
+          orderBy: { index: "asc" },
+          select: {
+            id: true,
+            index: true,
+            type: true,
+            labelSnapshot: true,
+            cardTemplateId: true,
+            createdAt: true,
+          },
+        },
+      },
+    });
+
+    if (!session) {
+      return res.status(404).json({
+        success: false,
+        error: { code: "SESSION_NOT_FOUND", message: "Session non trouvée." },
+      });
+    }
+
+    if (session.ownerKey !== ownerKey) {
+      return res.status(403).json({
+        success: false,
+        error: { code: "FORBIDDEN", message: "Accès interdit." },
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        session: {
+          id: session.id,
+          ownerKey: session.ownerKey,
+          seed: session.seed,
+          startedAt: session.startedAt,
+          finalizedAt: session.finalizedAt,
+          final: session.finalCardId
+            ? {
+                cardId: session.finalCardId,
+                type: session.finalType,
+                label: session.finalLabel,
+                pickIndex: session.finalPickIndex,
+              }
+            : null,
+          cards: session.cards,
+        },
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      error: { code: "INTERNAL_ERROR", message: "Unexpected server error." },
+    });
+  }
+}
