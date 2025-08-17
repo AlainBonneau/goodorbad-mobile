@@ -1,0 +1,495 @@
+openapi: 3.0.3
+info:
+  title: GoodOrBad API
+  version: 1.0.0
+  description: >
+    API pour piocher 5 cartes, finaliser une session et obtenir la carte officielle du jour.
+servers:
+  - url: http://localhost:3001
+    description: Dev server
+
+components:
+  parameters:
+    OwnerKeyHeader:
+      in: header
+      name: x-owner-key
+      required: true
+      schema:
+        type: string
+      description: 'Identifiant de l’utilisateur ou du device (ex: "device:abc123").'
+    SessionIdParam:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+      description: 'Identifiant de la session (uuid).'
+
+  schemas:
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: string
+          example: INTERNAL_ERROR
+        message:
+          type: string
+          example: Unexpected server error.
+
+    ApiResponseError:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          $ref: '#/components/schemas/ApiError'
+
+    SessionCard:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        index:
+          type: integer
+          minimum: 0
+          maximum: 4
+        type:
+          type: string
+          enum: [GOOD, BAD]
+        labelSnapshot:
+          type: string
+        cardTemplateId:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+
+    SessionSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        ownerKey:
+          type: string
+        seed:
+          type: string
+        startedAt:
+          type: string
+          format: date-time
+        finalizedAt:
+          type: string
+          format: date-time
+          nullable: true
+        finalCardId:
+          type: string
+          nullable: true
+        finalType:
+          type: string
+          enum: [GOOD, BAD]
+          nullable: true
+        finalLabel:
+          type: string
+          nullable: true
+        finalPickIndex:
+          type: integer
+          nullable: true
+        isOfficialDaily:
+          type: boolean
+
+    SessionDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        ownerKey:
+          type: string
+        seed:
+          type: string
+        startedAt:
+          type: string
+          format: date-time
+        finalizedAt:
+          type: string
+          format: date-time
+          nullable: true
+        final:
+          type: object
+          nullable: true
+          properties:
+            cardId:
+              type: string
+            type:
+              type: string
+              enum: [GOOD, BAD]
+            label:
+              type: string
+            pickIndex:
+              type: integer
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionCard'
+
+    DailyOutcome:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        ownerKey:
+          type: string
+        date:
+          type: string
+          format: date
+        sessionId:
+          type: string
+          format: uuid
+        finalCardId:
+          type: string
+        finalType:
+          type: string
+          enum: [GOOD, BAD]
+        finalLabel:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateSessionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            session:
+              type: object
+              properties:
+                id:
+                  type: string
+                ownerKey:
+                  type: string
+                seed:
+                  type: string
+                startedAt:
+                  type: string
+                  format: date-time
+
+    DrawCardResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            card:
+              $ref: '#/components/schemas/SessionCard'
+            remaining:
+              type: integer
+              description: 'Nombre de tirages restants (0..5).'
+              example: 4
+
+    FinalizeSessionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            official:
+              type: boolean
+              description: 'True si c’est la première session finalisée du jour.'
+            final:
+              type: object
+              properties:
+                cardId: { type: string }
+                type:
+                  type: string
+                  enum: [GOOD, BAD]
+                label: { type: string }
+                pickIndex: { type: integer }
+            session:
+              $ref: '#/components/schemas/SessionSummary'
+            dailyOutcome:
+              oneOf:
+                - $ref: '#/components/schemas/DailyOutcome'
+                - type: 'null'
+
+    GetSessionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            session:
+              $ref: '#/components/schemas/SessionDetail'
+
+    GetDailyOutcomeResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            dailyOutcome:
+              $ref: '#/components/schemas/DailyOutcome'
+
+    SessionsHistoryItem:
+      type: object
+      properties:
+        id: { type: string }
+        startedAt: { type: string, format: date-time }
+        finalizedAt: { type: string, format: date-time }
+        isOfficialDaily: { type: boolean }
+        finalType:
+          type: string
+          enum: [GOOD, BAD]
+          nullable: true
+        finalLabel:
+          type: string
+          nullable: true
+        finalPickIndex:
+          type: integer
+          nullable: true
+
+    SessionsHistoryResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/SessionsHistoryItem'
+        meta:
+          type: object
+          properties:
+            page: { type: integer, example: 1 }
+            limit: { type: integer, example: 10 }
+            total: { type: integer, example: 42 }
+            hasNext: { type: boolean, example: true }
+
+paths:
+  /:
+    get:
+      summary: Ping API
+      description: 'Retourne un message texte: "Bienvenue sur l''API Good or Bad !"'
+      responses:
+        '200':
+          description: Bienvenue
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /sessions:
+    post:
+      summary: Créer une session
+      parameters:
+        - $ref: '#/components/parameters/OwnerKeyHeader'
+      responses:
+        '201':
+          description: Session créée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSessionResponse'
+        '400':
+          description: Manque x-owner-key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+    get:
+      summary: Carte officielle du jour (Daily Outcome)
+      parameters:
+        - $ref: '#/components/parameters/OwnerKeyHeader'
+      responses:
+        '200':
+          description: Outcome du jour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDailyOutcomeResponse'
+        '404':
+          description: Aucun outcome pour aujourd’hui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+
+  /sessions/{id}:
+    get:
+      summary: Détail d’une session (avec ses tirages)
+      parameters:
+        - $ref: '#/components/parameters/OwnerKeyHeader'
+        - $ref: '#/components/parameters/SessionIdParam'
+      responses:
+        '200':
+          description: Session détaillée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSessionResponse'
+        '403':
+          description: Session non appartenant à ownerKey
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: Session introuvable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+
+  /sessions/{id}/draw:
+    post:
+      summary: Tirer une carte (jusqu’à 5)
+      parameters:
+        - $ref: '#/components/parameters/OwnerKeyHeader'
+        - $ref: '#/components/parameters/SessionIdParam'
+      responses:
+        '201':
+          description: Carte tirée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawCardResponse'
+        '400':
+          description: Limite atteinte / session finalisée / ownerKey manquant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: Session non appartenant à ownerKey
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: Session introuvable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+
+  /sessions/{id}/finalize:
+    post:
+      summary: Finaliser la session (choisir 1 carte aléatoire parmi les 5)
+      parameters:
+        - $ref: '#/components/parameters/OwnerKeyHeader'
+        - $ref: '#/components/parameters/SessionIdParam'
+      responses:
+        '200':
+          description: Session finalisée (officielle si première du jour)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinalizeSessionResponse'
+        '400':
+          description: Pas 5 cartes ou session déjà finalisée / ownerKey manquant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: Session non appartenant à ownerKey
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: Session introuvable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+
+  /sessions/history/list:
+    get:
+      summary: Historique des sessions finalisées
+      parameters:
+        - $ref: '#/components/parameters/OwnerKeyHeader'
+        - in: query
+          name: page
+          schema: { type: integer, minimum: 1, default: 1 }
+        - in: query
+          name: limit
+          schema: { type: integer, minimum: 1, maximum: 50, default: 10 }
+        - in: query
+          name: official
+          schema:
+            type: boolean
+            nullable: true
+      responses:
+        '200':
+          description: Liste paginée des sessions finalisées
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionsHistoryResponse'
+        '400':
+          description: ownerKey manquant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
