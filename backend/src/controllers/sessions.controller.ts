@@ -163,19 +163,27 @@ export async function finalizeSession(req: Request, res: Response) {
     if (!ownerKey) {
       return res.status(400).json({
         success: false,
-        error: { code: "OWNER_KEY_REQUIRED", message: "x-owner-key header is required." },
+        error: {
+          code: "OWNER_KEY_REQUIRED",
+          message: "x-owner-key header is required.",
+        },
       });
     }
 
     const sessionId = String(req.params.id);
 
-    // Récupère la session + ses cartes tirées (ordre garanti)
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
       include: {
         cards: {
           orderBy: { index: "asc" },
-          select: { id: true, index: true, type: true, labelSnapshot: true, cardTemplateId: true },
+          select: {
+            id: true,
+            index: true,
+            type: true,
+            labelSnapshot: true,
+            cardTemplateId: true,
+          },
         },
       },
     });
@@ -189,23 +197,31 @@ export async function finalizeSession(req: Request, res: Response) {
     if (session.ownerKey !== ownerKey) {
       return res.status(403).json({
         success: false,
-        error: { code: "FORBIDDEN", message: "This session does not belong to you." },
+        error: {
+          code: "FORBIDDEN",
+          message: "This session does not belong to you.",
+        },
       });
     }
     if (session.finalizedAt) {
       return res.status(400).json({
         success: false,
-        error: { code: "SESSION_FINALIZED", message: "Session already finalized." },
+        error: {
+          code: "SESSION_FINALIZED",
+          message: "Session already finalized.",
+        },
       });
     }
     if (session.cards.length !== 5) {
       return res.status(400).json({
         success: false,
-        error: { code: "NEED_5_CARDS", message: "You must draw exactly 5 cards before finalizing." },
+        error: {
+          code: "NEED_5_CARDS",
+          message: "You must draw exactly 5 cards before finalizing.",
+        },
       });
     }
 
-    // Choix aléatoire uniforme parmi les 5 cartes tirées
     const pickIndex = Math.floor(Math.random() * 5);
     const chosen = session.cards[pickIndex];
 
@@ -218,21 +234,28 @@ export async function finalizeSession(req: Request, res: Response) {
     });
 
     if (!existingDaily) {
-      // ✅ Première finalisation du jour → officielle
+      // Première finalisation du jour → officielle
       const [updatedSession, daily] = await prisma.$transaction([
         prisma.session.update({
           where: { id: sessionId },
           data: {
             finalizedAt: new Date(),
-            finalCardId: chosen.id,             // id de la SessionCard choisie
+            finalCardId: chosen.id,
             finalType: chosen.type as CardType,
             finalLabel: chosen.labelSnapshot,
             finalPickIndex: chosen.index,
             isOfficialDaily: true,
           },
           select: {
-            id: true, ownerKey: true, seed: true, startedAt: true, finalizedAt: true,
-            finalCardId: true, finalType: true, finalLabel: true, finalPickIndex: true,
+            id: true,
+            ownerKey: true,
+            seed: true,
+            startedAt: true,
+            finalizedAt: true,
+            finalCardId: true,
+            finalType: true,
+            finalLabel: true,
+            finalPickIndex: true,
             isOfficialDaily: true,
           },
         }),
@@ -246,8 +269,14 @@ export async function finalizeSession(req: Request, res: Response) {
             finalLabel: chosen.labelSnapshot,
           },
           select: {
-            id: true, ownerKey: true, date: true, sessionId: true,
-            finalCardId: true, finalType: true, finalLabel: true, createdAt: true,
+            id: true,
+            ownerKey: true,
+            date: true,
+            sessionId: true,
+            finalCardId: true,
+            finalType: true,
+            finalLabel: true,
+            createdAt: true,
           },
         }),
       ]);
@@ -267,7 +296,7 @@ export async function finalizeSession(req: Request, res: Response) {
         },
       });
     } else {
-      // ▶️ Une carte officielle existe déjà aujourd’hui → partie “fun”
+      // Une carte officielle existe déjà aujourd’hui → partie “fun”
       const updatedSession = await prisma.session.update({
         where: { id: sessionId },
         data: {
@@ -279,8 +308,15 @@ export async function finalizeSession(req: Request, res: Response) {
           isOfficialDaily: false,
         },
         select: {
-          id: true, ownerKey: true, seed: true, startedAt: true, finalizedAt: true,
-          finalCardId: true, finalType: true, finalLabel: true, finalPickIndex: true,
+          id: true,
+          ownerKey: true,
+          seed: true,
+          startedAt: true,
+          finalizedAt: true,
+          finalCardId: true,
+          finalType: true,
+          finalLabel: true,
+          finalPickIndex: true,
           isOfficialDaily: true,
         },
       });
@@ -431,6 +467,75 @@ export async function getDailyOutcome(req: Request, res: Response) {
     return res
       .status(200)
       .json({ success: true, data: { dailyOutcome: outcome } });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      error: { code: "INTERNAL_ERROR", message: "Unexpected server error." },
+    });
+  }
+}
+
+// Contrôleur pour récupérer l'historique des sessions
+export async function getSessionHistory(req: Request, res: Response) {
+  try {
+    const ownerKey = String(req.header("x-owner-key") || "").trim();
+
+    if (!ownerKey) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: "OWNER_KEY_REQUIRED",
+          message: "L'en-tête x-owner-key est requis.",
+        },
+      });
+    }
+
+    const page = Math.max(1, Number(req.query.page ?? 1));
+    const limit = Math.min(50, Number(req.query.limit ?? 10));
+    const officialParam = req.query.official;
+    const whereOfficial =
+      officialParam === undefined
+        ? undefined
+        : String(officialParam).toLowerCase() === "true";
+
+    const where = {
+      ownerKey,
+      finalizedAt: { not: null as any },
+      ...(whereOfficial === undefined
+        ? {}
+        : { isOfficialDaily: whereOfficial }),
+    };
+
+    const [total, items] = await prisma.$transaction([
+      prisma.session.count({ where }),
+      prisma.session.findMany({
+        where,
+        orderBy: { finalizedAt: "desc" },
+        skip: (page - 1) * limit,
+        take: limit,
+        select: {
+          id: true,
+          startedAt: true,
+          finalizedAt: true,
+          isOfficialDaily: true,
+          finalType: true,
+          finalLabel: true,
+          finalPickIndex: true,
+        },
+      }),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: { items },
+      meta: {
+        page,
+        limit,
+        total,
+        hasNext: page * limit < total,
+      },
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).json({
