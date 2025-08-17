@@ -160,31 +160,22 @@ export async function drawCard(req: Request, res: Response) {
 export async function finalizeSession(req: Request, res: Response) {
   try {
     const ownerKey = String(req.header("x-owner-key") || "").trim();
-
     if (!ownerKey) {
       return res.status(400).json({
         success: false,
-        error: {
-          code: "OWNER_KEY_REQUIRED",
-          message: "L'en-tête x-owner-key est requis.",
-        },
+        error: { code: "OWNER_KEY_REQUIRED", message: "x-owner-key header is required." },
       });
     }
 
     const sessionId = String(req.params.id);
 
+    // Récupère la session + ses cartes tirées (ordre garanti)
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
       include: {
         cards: {
           orderBy: { index: "asc" },
-          select: {
-            id: true,
-            index: true,
-            type: true,
-            labelSnapshot: true,
-            cardTemplateId: true,
-          },
+          select: { id: true, index: true, type: true, labelSnapshot: true, cardTemplateId: true },
         },
       },
     });
@@ -192,37 +183,92 @@ export async function finalizeSession(req: Request, res: Response) {
     if (!session) {
       return res.status(404).json({
         success: false,
-        error: { code: "SESSION_NOT_FOUND", message: "Session non trouvée." },
+        error: { code: "SESSION_NOT_FOUND", message: "Session not found." },
       });
     }
-
+    if (session.ownerKey !== ownerKey) {
+      return res.status(403).json({
+        success: false,
+        error: { code: "FORBIDDEN", message: "This session does not belong to you." },
+      });
+    }
     if (session.finalizedAt) {
       return res.status(400).json({
         success: false,
-        error: {
-          code: "SESSION_FINALIZED",
-          message: "Session déjà finalisée.",
-        },
+        error: { code: "SESSION_FINALIZED", message: "Session already finalized." },
       });
     }
-
     if (session.cards.length !== 5) {
       return res.status(400).json({
         success: false,
-        error: {
-          code: "INVALID_CARD_COUNT",
-          message: "La session doit contenir exactement 5 cartes.",
-        },
+        error: { code: "NEED_5_CARDS", message: "You must draw exactly 5 cards before finalizing." },
       });
     }
 
+    // Choix aléatoire uniforme parmi les 5 cartes tirées
     const pickIndex = Math.floor(Math.random() * 5);
     const chosen = session.cards[pickIndex];
 
     const todayUTC = startOfUTCDay();
 
-    const [updatedSession, daily] = await prisma.$transaction([
-      prisma.session.update({
+    // Vérifie s'il y a déjà une carte officielle du jour
+    const existingDaily = await prisma.dailyOutcome.findUnique({
+      where: { ownerKey_date: { ownerKey, date: todayUTC } },
+      select: { id: true },
+    });
+
+    if (!existingDaily) {
+      // ✅ Première finalisation du jour → officielle
+      const [updatedSession, daily] = await prisma.$transaction([
+        prisma.session.update({
+          where: { id: sessionId },
+          data: {
+            finalizedAt: new Date(),
+            finalCardId: chosen.id,             // id de la SessionCard choisie
+            finalType: chosen.type as CardType,
+            finalLabel: chosen.labelSnapshot,
+            finalPickIndex: chosen.index,
+            isOfficialDaily: true,
+          },
+          select: {
+            id: true, ownerKey: true, seed: true, startedAt: true, finalizedAt: true,
+            finalCardId: true, finalType: true, finalLabel: true, finalPickIndex: true,
+            isOfficialDaily: true,
+          },
+        }),
+        prisma.dailyOutcome.create({
+          data: {
+            ownerKey,
+            date: todayUTC,
+            sessionId,
+            finalCardId: chosen.id,
+            finalType: chosen.type,
+            finalLabel: chosen.labelSnapshot,
+          },
+          select: {
+            id: true, ownerKey: true, date: true, sessionId: true,
+            finalCardId: true, finalType: true, finalLabel: true, createdAt: true,
+          },
+        }),
+      ]);
+
+      return res.status(200).json({
+        success: true,
+        data: {
+          official: true,
+          final: {
+            cardId: updatedSession.finalCardId,
+            type: updatedSession.finalType,
+            label: updatedSession.finalLabel,
+            pickIndex: updatedSession.finalPickIndex,
+          },
+          session: updatedSession,
+          dailyOutcome: daily,
+        },
+      });
+    } else {
+      // ▶️ Une carte officielle existe déjà aujourd’hui → partie “fun”
+      const updatedSession = await prisma.session.update({
         where: { id: sessionId },
         data: {
           finalizedAt: new Date(),
@@ -230,64 +276,31 @@ export async function finalizeSession(req: Request, res: Response) {
           finalType: chosen.type as CardType,
           finalLabel: chosen.labelSnapshot,
           finalPickIndex: chosen.index,
+          isOfficialDaily: false,
         },
         select: {
-          id: true,
-          ownerKey: true,
-          seed: true,
-          startedAt: true,
-          finalizedAt: true,
-          finalCardId: true,
-          finalType: true,
-          finalLabel: true,
-          finalPickIndex: true,
+          id: true, ownerKey: true, seed: true, startedAt: true, finalizedAt: true,
+          finalCardId: true, finalType: true, finalLabel: true, finalPickIndex: true,
+          isOfficialDaily: true,
         },
-      }),
-      prisma.dailyOutcome.create({
-        data: {
-          ownerKey: session.ownerKey,
-          date: todayUTC,
-          sessionId: session.id,
-          finalCardId: chosen.id,
-          finalType: chosen.type,
-          finalLabel: chosen.labelSnapshot,
-        },
-        select: {
-          id: true,
-          ownerKey: true,
-          date: true,
-          sessionId: true,
-          finalCardId: true,
-          finalType: true,
-          finalLabel: true,
-          createdAt: true,
-        },
-      }),
-    ]);
+      });
 
-    return res.status(200).json({
-      success: true,
-      data: {
-        final: {
-          cardId: updatedSession.finalCardId,
-          type: updatedSession.finalType,
-          label: updatedSession.finalLabel,
-          pickIndex: updatedSession.finalPickIndex,
-        },
-        session: updatedSession,
-        dailyOutcome: daily,
-      },
-    });
-  } catch (err: any) {
-    if (err?.code === "P2002") {
-      return res.status(409).json({
-        success: false,
-        error: {
-          code: "DAILY_OUTCOME_EXISTS",
-          message: "A daily outcome already exists for this owner and date.",
+      return res.status(200).json({
+        success: true,
+        data: {
+          official: false,
+          final: {
+            cardId: updatedSession.finalCardId,
+            type: updatedSession.finalType,
+            label: updatedSession.finalLabel,
+            pickIndex: updatedSession.finalPickIndex,
+          },
+          session: updatedSession,
+          dailyOutcome: null,
         },
       });
     }
+  } catch (err) {
     console.error(err);
     return res.status(500).json({
       success: false,

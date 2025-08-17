@@ -44,6 +44,9 @@ model Session {
   finalLabel     String?
   finalPickIndex Int?          // 0..4
 
+    // Nouveau : indique si cette session est l’issue officielle du jour
+  isOfficialDaily Boolean   @default(false)
+
   // Relations
   cards          SessionCard[]
   dailyOutcome   DailyOutcome?
