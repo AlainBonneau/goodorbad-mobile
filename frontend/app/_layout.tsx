@@ -1,12 +1,10 @@
 import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import "../global.css";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-export default function Layout() {
+export default function RootLayout() {
   return (
-    <>
-      <Stack screenOptions={{ headerTitle: "Good or Bad" }} />
-      <StatusBar style="auto" />
-    </>
+    <SafeAreaProvider>
+      <Stack screenOptions={{ headerShown: false }} />
+    </SafeAreaProvider>
   );
 }
