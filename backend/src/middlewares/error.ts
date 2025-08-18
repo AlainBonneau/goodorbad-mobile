@@ -20,24 +20,19 @@ export const asyncHandler = <
 };
 
 // Middleware pour gérer les erreurs
-export function errorHandler(
-  err: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  const error = err as any;
-
-  if (error?.code === "P2002") {
+export function errorHandler(err: any, _req: any, res: any, _next: any) {
+  if (err?.code === "P2002") {
     return res.status(409).json({
       success: false,
-      error: { code: "CONFLICT", message: "Unique constraint violation" },
+      error: { code: "CONFLICT", message: "Unique constraint violated." },
     });
   }
+  const status = typeof err?.status === "number" ? err.status : 500;
+  const code = err?.code ?? "INTERNAL_ERROR";
+  const message = err?.message ?? "Unexpected server error.";
 
-  const status = typeof error?.status === "number" ? error.status : 500;
-  const code = error?.code ?? "INTERNAL_SERVER_ERROR";
-  const message = error?.message ?? "An unexpected error occurred";
+  const payload: any = { success: false, error: { code, message } };
+  if (err?.details) payload.error.details = err.details;
 
-  return res.status(status).json({ success: false, error: { code, message } });
+  return res.status(status).json(payload);
 }
