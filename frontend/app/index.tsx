@@ -1,13 +1,12 @@
-import { View, Text } from "react-native";
-import { Link } from "expo-router";
+// app/index.tsx
+import { SafeAreaView, StatusBar } from "react-native";
+import GameScreen from "./screens/GameScreen";
 
-export default function Home() {
+export default function Index() {
   return (
-    <View className="flex-1 items-center justify-center bg-black">
-      <Text className="text-white text-3xl font-bold mb-6">Home</Text>
-      <Link href="/debug">
-        <Text className="text-purple-400 underline">Aller à /debug</Text>
-      </Link>
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar barStyle="dark-content" />
+      <GameScreen />
+    </SafeAreaView>
   );
 }
