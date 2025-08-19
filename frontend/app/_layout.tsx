@@ -1,11 +1,13 @@
-import { Stack } from "expo-router";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import "../global.css";
+import React from 'react';
+import { SafeAreaView, StatusBar } from 'react-native';
+import GameScreen from '../src/screens/GameScreen';
+
 
 export default function RootLayout() {
-  return (
-    <SafeAreaProvider>
-      <Stack screenOptions={{ headerShown: false }} />
-    </SafeAreaProvider>
-  );
+return (
+<SafeAreaView style={{ flex: 1 }}>
+<StatusBar barStyle="dark-content" />
+<GameScreen />
+</SafeAreaView>
+);
 }
