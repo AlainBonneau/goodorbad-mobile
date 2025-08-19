@@ -1,6 +1,6 @@
 import React from 'react';
 import { SafeAreaView, StatusBar } from 'react-native';
-import GameScreen from '../src/screens/GameScreen';
+import GameScreen from './screens/GameScreen';
 
 
 export default function RootLayout() {
