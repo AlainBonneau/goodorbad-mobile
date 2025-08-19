@@ -1,6 +1,5 @@
 import React from "react";
-import { Pressable, Text, StyleSheet } from "react-native";
-import { Colors, Radii, Spacing, Fonts } from "../theme";
+import { Pressable, Text } from "react-native";
 
 export default function PrimaryButton({
   title,
@@ -13,28 +12,13 @@ export default function PrimaryButton({
 }) {
   return (
     <Pressable
-      disabled={disabled}
       onPress={onPress}
-      style={({ pressed }) => [
-        styles.btn,
-        disabled && styles.disabled,
-        pressed && styles.pressed,
-      ]}
+      disabled={disabled}
+      className={`rounded-xl items-center px-4 py-3 ${
+        disabled ? "bg-blue-400" : "bg-blue-600 active:bg-blue-700"
+      }`}
     >
-      <Text style={styles.txt}>{title}</Text>
+      <Text className="text-white font-bold text-base">{title}</Text>
     </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  btn: {
-    backgroundColor: Colors.blue,
-    paddingVertical: 12,
-    paddingHorizontal: 18,
-    borderRadius: Radii.md,
-    alignItems: "center",
-  },
-  disabled: { opacity: 0.5 },
-  pressed: { opacity: 0.85 },
-  txt: { color: "#fff", fontWeight: "700", fontSize: Fonts.body },
-});

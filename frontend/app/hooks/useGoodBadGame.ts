@@ -10,7 +10,6 @@ export default function useGoodBadGame() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [draws, setDraws] = useState<Card[]>([]);
   const [lastCard, setLastCard] = useState<Card | null>(null);
-  const [isFlipping, setIsFlipping] = useState(false);
   const [showFinalCards, setShowFinalCards] = useState(false);
   const [pickedIndex, setPickedIndex] = useState<number | null>(null);
   const [finalCard, setFinalCard] = useState<Card | null>(null);
@@ -23,10 +22,8 @@ export default function useGoodBadGame() {
     [draws]
   );
   const badCount = attempts - goodCount;
-
   const canDraw = attempts < MAX_ATTEMPTS && !finalCard;
   const canTypeName = canDraw && !finalCard;
-
   const shuffledCards = useMemo(
     () => (attempts === MAX_ATTEMPTS ? shuffle(draws) : []),
     [attempts, draws]
@@ -44,20 +41,16 @@ export default function useGoodBadGame() {
     try {
       setError(null);
       const id = await startSessionIfNeeded();
-      setIsFlipping(true);
       const { card } = await api.draw(id);
       setLastCard(card);
       setDraws((prev) => [...prev, card]);
       flipKeyRef.current += 1;
     } catch (e: any) {
       setError(e.message || "Une erreur est survenue");
-      setIsFlipping(false);
     }
   }, [canDraw, startSessionIfNeeded]);
 
-  const revealFinalChoices = useCallback(() => {
-    setShowFinalCards(true);
-  }, []);
+  const revealFinalChoices = useCallback(() => setShowFinalCards(true), []);
 
   const pickFinal = useCallback(
     async (index: number) => {
@@ -77,31 +70,41 @@ export default function useGoodBadGame() {
     [pickedIndex, sessionId]
   );
 
+  const reset = useCallback(() => {
+    setSessionId(null);
+    setDraws([]);
+    setLastCard(null);
+    setShowFinalCards(false);
+    setPickedIndex(null);
+    setFinalCard(null);
+    setError(null);
+    flipKeyRef.current += 1;
+  }, []);
+
+  const getFinalType = useCallback(
+    (card?: Card | null): CardType | undefined => card?.type,
+    []
+  );
+
   return {
     name,
     setName,
-    sessionId,
-    draws,
-    lastCard,
-    isFlipping,
-    showFinalCards,
-    pickedIndex,
-    finalCard,
-    error,
     attempts,
     goodCount,
     badCount,
+    lastCard,
+    flipKey: flipKeyRef.current,
+    showFinalCards,
+    shuffledCards,
+    pickedIndex,
+    finalCard,
+    error,
     canDraw,
     canTypeName,
-    shuffledCards,
+    getFinalType,
     draw,
     revealFinalChoices,
     pickFinal,
-    flipKeyRef,
-    setDraws,
-    setShowFinalCards,
-    setPickedIndex,
-    setFinalCard,
-    setError,
+    reset,
   };
 }

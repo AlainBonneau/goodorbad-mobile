@@ -1,6 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Colors, Radii, Spacing } from "../theme";
+import { View, Text } from "react-native";
 import type { Card } from "../types";
 
 export default function FinalResult({
@@ -12,16 +11,19 @@ export default function FinalResult({
 }) {
   const isGood = card.type === "good";
   return (
-    <View style={styles.block}>
-      <Text style={styles.title}>Voici ta carte finale !</Text>
+    <View className="mt-6 w-full items-center">
+      <Text className="text-base text-neutral-600 mb-3 font-semibold">
+        Voici ta carte finale !
+      </Text>
       <View
-        style={[
-          styles.bigCard,
-          { borderColor: isGood ? Colors.blue : Colors.red },
-        ]}
+        className={`bg-white rounded-xl px-4 py-4 shadow-xl max-w-[520px] border-2 ${
+          isGood ? "border-blue-600" : "border-red-600"
+        }`}
       >
         <Text
-          style={[styles.text, { color: isGood ? Colors.blue : Colors.red }]}
+          className={`text-center text-lg font-extrabold ${
+            isGood ? "text-blue-600" : "text-red-600"
+          }`}
         >
           {name?.trim() ? `${name}, ` : ""}
           {card.text}
@@ -30,26 +32,3 @@ export default function FinalResult({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  block: { marginTop: Spacing.xl, width: "100%", alignItems: "center" },
-  title: {
-    fontSize: 16,
-    color: Colors.muted,
-    marginBottom: Spacing.md,
-    fontWeight: "600",
-  },
-  bigCard: {
-    backgroundColor: "#fff",
-    borderWidth: 3,
-    borderRadius: Radii.lg,
-    paddingVertical: 18,
-    paddingHorizontal: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.18,
-    shadowRadius: 16,
-    elevation: 6,
-    maxWidth: 520,
-  },
-  text: { textAlign: "center", fontSize: 18, fontWeight: "700" },
-});

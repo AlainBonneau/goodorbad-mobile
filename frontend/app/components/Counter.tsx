@@ -1,25 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Colors, Fonts, Spacing } from "../theme";
+import { Text, View } from "react-native";
 
 export default function Counter({ good, bad }: { good: number; bad: number }) {
   return (
-    <View style={styles.row}>
-      <Text style={[styles.count, { color: Colors.blue }]}>{good}</Text>
-      <Text style={styles.sep}>|</Text>
-      <Text style={[styles.count, { color: Colors.red }]}>{bad}</Text>
+    <View className="flex-row items-center justify-center gap-2 mb-3">
+      <Text className="text-blue-600 text-2xl font-extrabold">{good}</Text>
+      <Text className="text-neutral-500 text-lg">|</Text>
+      <Text className="text-red-600 text-2xl font-extrabold">{bad}</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    marginBottom: Spacing.md,
-    justifyContent: "center",
-  },
-  count: { fontSize: 22, fontWeight: "700" },
-  sep: { color: Colors.muted, fontSize: 18, marginHorizontal: 4 },
-});

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import BackgroundSplit from "../components/BackgroundSplit";
 import ScreenCard from "../components/ScreenCard";
 import Counter from "../components/Counter";
@@ -8,11 +8,9 @@ import FlipCard from "../components/FlipCard";
 import FinalCardsGrid from "../components/FinalCardsGrid";
 import FinalResult from "../components/FinalResult";
 import useGoodBadGame, { MAX_ATTEMPTS } from "../hooks/useGoodBadGame";
-import { Colors, Fonts, Spacing } from "../theme";
 
 export default function GameScreen() {
   const g = useGoodBadGame();
-
   const showFlip =
     !!g.lastCard &&
     g.attempts <= MAX_ATTEMPTS &&
@@ -24,8 +22,10 @@ export default function GameScreen() {
   return (
     <BackgroundSplit>
       <ScreenCard>
-        <Text style={styles.title}>Bonne ou Mauvaise chance ?</Text>
-        <Text style={styles.subtitle}>
+        <Text className="text-2xl font-extrabold text-center mb-2">
+          Bonne ou Mauvaise chance ?
+        </Text>
+        <Text className="text-sm text-neutral-600 text-center mb-3">
           Tire 5 cartes et choisis-en une au hasard à la fin !
         </Text>
 
@@ -35,7 +35,7 @@ export default function GameScreen() {
           editable={g.canTypeName}
           placeholder="Entre ton prénom"
           onSubmitEditing={g.draw}
-          style={styles.input}
+          className="border border-neutral-300 rounded-xl px-4 py-2 text-base mb-3"
         />
 
         <PrimaryButton
@@ -47,7 +47,7 @@ export default function GameScreen() {
         <Counter good={g.goodCount} bad={g.badCount} />
 
         {showFlip && (
-          <View key={`flip-${g.flipKey}`} style={{ marginTop: Spacing.lg }}>
+          <View key={`flip-${g.flipKey}`} className="mt-4">
             <FlipCard
               isFlipped
               frontLabel="?"
@@ -58,7 +58,7 @@ export default function GameScreen() {
         )}
 
         {canRevealButton && (
-          <View style={{ marginTop: Spacing.lg }}>
+          <View className="mt-4">
             <PrimaryButton
               title="Choisir votre carte finale"
               onPress={g.revealFinalChoices}
@@ -67,8 +67,10 @@ export default function GameScreen() {
         )}
 
         {g.showFinalCards && g.attempts === MAX_ATTEMPTS && !g.finalCard && (
-          <View style={{ marginTop: Spacing.lg }}>
-            <Text style={styles.finalChoice}>Choisis ta carte finale :</Text>
+          <View className="mt-4">
+            <Text className="text-base text-neutral-600 text-center mb-3 font-medium">
+              Choisis ta carte finale :
+            </Text>
             <FinalCardsGrid
               cards={g.shuffledCards}
               pickedIndex={g.pickedIndex}
@@ -80,45 +82,15 @@ export default function GameScreen() {
         {g.finalCard && <FinalResult name={g.name} card={g.finalCard} />}
 
         {(g.finalCard || g.attempts >= MAX_ATTEMPTS) && (
-          <View style={{ marginTop: Spacing.xl }}>
+          <View className="mt-6">
             <PrimaryButton title="Rejouer" onPress={g.reset} />
           </View>
         )}
 
-        {g.error && <Text style={styles.error}>{g.error}</Text>}
+        {g.error && (
+          <Text className="text-red-600 mt-3 text-center">{g.error}</Text>
+        )}
       </ScreenCard>
     </BackgroundSplit>
   );
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 24,
-    textAlign: "center",
-    fontWeight: "800",
-    marginBottom: Spacing.sm,
-  },
-  subtitle: {
-    fontSize: Fonts.small,
-    color: Colors.muted,
-    textAlign: "center",
-    marginBottom: Spacing.md,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#CCC",
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    fontSize: 16,
-    marginBottom: Spacing.md,
-  },
-  finalChoice: {
-    fontSize: 16,
-    color: Colors.muted,
-    marginBottom: Spacing.md,
-    textAlign: "center",
-    fontWeight: "500",
-  },
-  error: { color: Colors.red, marginTop: Spacing.md, textAlign: "center" },
-});

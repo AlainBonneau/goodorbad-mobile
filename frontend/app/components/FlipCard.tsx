@@ -1,15 +1,14 @@
 import React, { useEffect, useRef } from "react";
-import { Animated, Easing, StyleSheet, Text, View } from "react-native";
-import { Colors, Radii } from "../theme";
+import { Animated, Easing, Text, View, DimensionValue } from "react-native";
 import type { CardType } from "../types";
 
 interface Props {
-  width?: number | string;
+  width?: DimensionValue;
   height?: number;
-  isFlipped: boolean; // when true -> animate to back side
-  frontLabel?: string; // default "?"
-  backText: string; // card message
-  tint?: CardType | undefined; // controls border + text color
+  isFlipped: boolean;
+  frontLabel?: string;
+  backText: string;
+  tint?: CardType | undefined;
   onAnimationEnd?: () => void;
 }
 
@@ -22,7 +21,7 @@ export default function FlipCard({
   tint,
   onAnimationEnd,
 }: Props) {
-  const prog = useRef(new Animated.Value(0)).current; // 0: front, 1: back
+  const prog = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.timing(prog, {
@@ -43,63 +42,38 @@ export default function FlipCard({
   });
 
   const borderColor =
-    tint === "good" ? Colors.blue : tint === "bad" ? Colors.red : Colors.border;
+    tint === "good" ? "#246BFD" : tint === "bad" ? "#E63946" : "#BBBBBB";
   const textColor =
-    tint === "good" ? Colors.blue : tint === "bad" ? Colors.red : Colors.text;
+    tint === "good" ? "#246BFD" : tint === "bad" ? "#E63946" : "#111111";
 
   return (
-    <View style={[styles.container, { width, height }]}>
+    <View style={{ width, height }} className="relative">
       <Animated.View
-        style={[
-          styles.card,
-          styles.front,
-          {
-            borderColor,
-            transform: [{ perspective: 1000 }, { rotateY: rotateFront }],
-          },
-        ]}
+        style={{
+          transform: [{ perspective: 1000 }, { rotateY: rotateFront }],
+          borderColor,
+        }}
+        className="absolute inset-0 bg-neutral-100 rounded-2xl border-2.5 items-center justify-center shadow-xl"
       >
-        <Text style={[styles.frontMark, { color: "#BBB" }]}>{frontLabel}</Text>
+        <Text className="text-4xl font-extrabold tracking-widest text-neutral-400">
+          {frontLabel}
+        </Text>
       </Animated.View>
 
       <Animated.View
-        style={[
-          styles.card,
-          styles.back,
-          {
-            borderColor,
-            transform: [{ perspective: 1000 }, { rotateY: rotateBack }],
-          },
-        ]}
+        style={{
+          transform: [{ perspective: 1000 }, { rotateY: rotateBack }],
+          borderColor,
+        }}
+        className="absolute inset-0 bg-white rounded-2xl border-2.5 items-center justify-center shadow-xl"
       >
-        <Text style={[styles.backText, { color: textColor }]}>{backText}</Text>
+        <Text
+          style={{ color: textColor }}
+          className="text-lg font-extrabold text-center px-4"
+        >
+          {backText}
+        </Text>
       </Animated.View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { position: "relative" },
-  card: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "#fff",
-    borderRadius: Radii.lg,
-    borderWidth: 2.3,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
-    elevation: 5,
-    backfaceVisibility: "hidden",
-    paddingHorizontal: 16,
-  },
-  front: { backgroundColor: "#F5F6FA" },
-  back: { transform: [{ rotateY: "180deg" }] },
-  frontMark: { fontSize: 36, fontWeight: "800", letterSpacing: 2 },
-  backText: { fontSize: 18, fontWeight: "700", textAlign: "center" },
-});

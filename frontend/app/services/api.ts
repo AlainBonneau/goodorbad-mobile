@@ -1,4 +1,4 @@
-import { Card, Session } from "../types";
+import { Card } from "../types";
 
 const BASE_URL =
   process.env.EXPO_PUBLIC_API_BASE_URL || "http://localhost:3001";
@@ -24,17 +24,14 @@ export const api = {
       body: JSON.stringify({ name }),
     });
   },
-
   async getSession(
     id: string
   ): Promise<{ draws: Card[]; finalPickIndex?: number }> {
     return http(`/api/v1/sessions/${id}`);
   },
-
   async draw(id: string): Promise<{ card: Card }> {
     return http(`/api/v1/sessions/${id}/draw`, { method: "POST" });
   },
-
   async finalPick(
     id: string,
     index: number
