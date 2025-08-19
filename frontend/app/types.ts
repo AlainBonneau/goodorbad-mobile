@@ -3,7 +3,8 @@ export type CardType = "good" | "bad";
 export type Card = {
   id: string;
   type: CardType;
-  text: string;
+  text?: string;
+  label?: string; 
 };
 
 export type Session = {

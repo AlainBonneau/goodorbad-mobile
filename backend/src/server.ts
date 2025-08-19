@@ -13,7 +13,6 @@ import "dotenv/config";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Charge openapi.yaml (à la racine du projet)
 const openapiPath = path.join(__dirname, "..", "openapi.yaml");
 const openapiDoc = YAML.parse(fs.readFileSync(openapiPath, "utf8"));
 
@@ -54,8 +53,9 @@ app.get("/", (_req, res) => {
   res.send("Bienvenue sur l'API Good or Bad !");
 });
 
-app.use("/sessions", sessionsRouter);
+app.use("/api/v1/sessions", sessionsRouter);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port http://localhost:${PORT}`);
+app.listen(3000, "0.0.0.0", () => {
+  console.log("Server running on http://0.0.0.0:3000");
+  console.log("Also available on http://192.168.1.55:3000");
 });
