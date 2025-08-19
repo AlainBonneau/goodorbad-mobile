@@ -1,4 +1,4 @@
-// app/index.tsx
+import "../global.css";
 import { SafeAreaView, StatusBar } from "react-native";
 import GameScreen from "./screens/GameScreen";
 
