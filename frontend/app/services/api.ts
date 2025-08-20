@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const BASE_URL =
   process.env.EXPO_PUBLIC_API_BASE_URL || "http://localhost:3000";
 
-// Fonction qui génère ou récupère l'ownerKey unique pour cet utilisateur
+// Génère ou récupère l'ownerKey unique pour cet utilisateur
 async function getOwnerKey(): Promise<string> {
   try {
     let ownerKey = await AsyncStorage.getItem("ownerKey");
@@ -70,7 +70,6 @@ async function http<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 export const api = {
-  // Fonction pour créer une nouvelle session
   async createSession(name: string): Promise<{ id: string }> {
     const response = await http<{ success: boolean; data: { id: string } }>(
       `/api/v1/sessions`,
@@ -82,7 +81,6 @@ export const api = {
     return { id: response.data.id };
   },
 
-  // Fonction pour récupérer une session existante
   async getSession(
     id: string
   ): Promise<{ draws: Card[]; finalPickIndex?: number }> {
@@ -97,7 +95,6 @@ export const api = {
     };
   },
 
-  // Fonction pour piocher une carte
   async draw(id: string): Promise<{ card: Card }> {
     const response = await http<{ success: boolean; data: { card: any } }>(
       `/api/v1/sessions/${id}/draw`,
@@ -106,17 +103,23 @@ export const api = {
       }
     );
 
+    console.log("🔍 Raw backend card response:", response.data.card);
+
     const backendCard = response.data.card;
+    const adaptedCard = {
+      id: backendCard.id,
+      type: backendCard.type.toLowerCase(),
+      label:
+        backendCard.labelSnapshot || backendCard.label || "Carte sans texte",
+    };
+
+    console.log("🔍 Adapted card for frontend:", adaptedCard);
+
     return {
-      card: {
-        id: backendCard.id,
-        type: backendCard.type.toLowerCase(),
-        label: backendCard.labelSnapshot,
-      },
+      card: adaptedCard,
     };
   },
 
-  // Fonction pour finaliser le choix
   async finalPick(
     id: string,
     index: number

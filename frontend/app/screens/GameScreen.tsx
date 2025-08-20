@@ -51,7 +51,7 @@ export default function GameScreen() {
             <FlipCard
               isFlipped
               frontLabel="?"
-              backText={g.lastCard?.text || ""}
+              backText={g.lastCard?.label || ""}
               tint={g.lastCard?.type}
             />
           </View>
