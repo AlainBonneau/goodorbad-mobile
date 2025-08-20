@@ -26,7 +26,7 @@ export default function FinalResult({
           }`}
         >
           {name?.trim() ? `${name}, ` : ""}
-          {card.text}
+          {card.label}
         </Text>
       </View>
     </View>

@@ -128,7 +128,7 @@ export const api = {
       `/api/v1/sessions/${id}/finalize`,
       {
         method: "POST",
-        body: JSON.stringify({ index }),
+        body: JSON.stringify({}),
       }
     );
 
