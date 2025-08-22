@@ -1,6 +1,6 @@
-import "../global.css";
+import "../../global.css";
 import { SafeAreaView, StatusBar } from "react-native";
-import GameScreen from "./screens/GameScreen";
+import GameScreen from "../screens/GameScreen";
 
 export default function Index() {
   return (
