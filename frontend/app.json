@@ -15,7 +15,8 @@
       }
     },
     "web": {
-      "bundler": "metro"
+      "bundler": "metro",
+      "userInterfaceStyle": "light"
     },
     "plugins": ["expo-router"],
     "scheme": "good-or-bad-mobile"
