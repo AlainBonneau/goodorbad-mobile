@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TextInput, View } from "react-native";
+import { Pressable, Text, TextInput, View } from "react-native";
 import BackgroundSplit from "../components/BackgroundSplit";
 import ScreenCard from "../components/ScreenCard";
 import Counter from "../components/Counter";
@@ -8,6 +8,7 @@ import FlipCard from "../components/FlipCard";
 import FinalCardsGrid from "../components/FinalCardsGrid";
 import FinalResult from "../components/FinalResult";
 import useGoodBadGame, { MAX_ATTEMPTS } from "../hooks/useGoodBadGame";
+import { Link } from "expo-router/build/link/Link";
 
 export default function GameScreen() {
   const g = useGoodBadGame();
@@ -28,6 +29,12 @@ export default function GameScreen() {
         <Text className="text-sm text-neutral-600 text-center mb-3">
           Tire 5 cartes et choisis-en une au hasard à la fin !
         </Text>
+
+        <Link href="/history" asChild>
+          <Pressable className="bg-gray-100 p-2 rounded-lg">
+            <Text className="text-gray-700">📋 Historique</Text>
+          </Pressable>
+        </Link>
 
         <TextInput
           value={g.name}

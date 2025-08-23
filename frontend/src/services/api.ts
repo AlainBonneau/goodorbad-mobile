@@ -81,13 +81,13 @@ export const api = {
     return { id: response.data.id };
   },
 
+  // Méthode pour récupérer une session par son ID
   async getSession(
     id: string
   ): Promise<{ draws: Card[]; finalPickIndex?: number }> {
     const response = await http<{ success: boolean; data: { session: any } }>(
       `/api/v1/sessions/${id}`
     );
-
     const session = response.data.session;
     return {
       draws: session.cards || [],
@@ -105,10 +105,11 @@ export const api = {
 
     console.log("🔍 Raw backend card response:", response.data.card);
 
+    // Adapte la réponse backend au format attendu par le frontend
     const backendCard = response.data.card;
     const adaptedCard = {
       id: backendCard.id,
-      type: backendCard.type.toLowerCase(),
+      type: backendCard.type.toLowerCase(), // "GOOD" -> "good"
       label:
         backendCard.labelSnapshot || backendCard.label || "Carte sans texte",
     };
@@ -128,7 +129,7 @@ export const api = {
       `/api/v1/sessions/${id}/finalize`,
       {
         method: "POST",
-        body: JSON.stringify({}),
+        body: JSON.stringify({}), // N'envoie pas l'index, laisse le backend choisir
       }
     );
 
@@ -141,5 +142,48 @@ export const api = {
       },
       pickedIndex: final.pickIndex,
     };
+  },
+
+  // Méthode pour récupérer l'historique des sessions
+  async getSessionHistory(
+    page = 1,
+    limit = 10,
+    official?: boolean
+  ): Promise<{
+    items: any[];
+    meta: { page: number; limit: number; total: number; hasNext: boolean };
+  }> {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+
+    if (official !== undefined) {
+      params.append("official", official.toString());
+    }
+
+    const response = await http<{
+      success: boolean;
+      data: { items: any[] };
+      meta: { page: number; limit: number; total: number; hasNext: boolean };
+    }>(`/api/v1/sessions/history/list?${params}`);
+
+    return {
+      items: response.data.items,
+      meta: response.meta,
+    };
+  },
+
+  async getDailyOutcome(): Promise<{ dailyOutcome: any } | null> {
+    try {
+      const response = await http<{
+        success: boolean;
+        data: { dailyOutcome: any };
+      }>(`/api/v1/sessions/daily-outcome`);
+
+      return response.data;
+    } catch (error) {
+      return null;
+    }
   },
 };
