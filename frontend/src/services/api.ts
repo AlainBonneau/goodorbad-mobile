@@ -189,24 +189,22 @@ export const api = {
 
   // Méthode pour récupérer les statistiques
   async getStatistics() {
-    const response = await fetch(`${BASE_URL}/api/v1/stats/statistics`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "x-owner-key": await getOwnerKey(),
-      },
-    });
+    console.log("📊 [STATS] Starting getStatistics...");
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error?.message || `HTTP ${response.status}`);
+    try {
+      const response = await http<{
+        success: boolean;
+        data: any;
+      }>(`/api/v1/stats/statistics`);
+
+      console.log(
+        "📊 [STATS] Response received:",
+        JSON.stringify(response, null, 2)
+      );
+      return response.data;
+    } catch (error) {
+      console.error("❌ [STATS] Error in getStatistics:", error);
+      throw error;
     }
-
-    const data = await response.json();
-    if (!data.success) {
-      throw new Error(data.error?.message || "Unknown error");
-    }
-
-    return data.data;
   },
 };

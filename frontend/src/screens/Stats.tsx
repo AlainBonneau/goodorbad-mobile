@@ -162,16 +162,33 @@ export default function StatisticsScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const loadStatistics = async (isRefresh = false) => {
+    console.log("🔍 [COMPONENT] loadStatistics called, isRefresh:", isRefresh);
+    console.log("🔍 [COMPONENT] Current stats state:", stats);
+    console.log("🔍 [COMPONENT] Loading state:", loading);
+
     try {
       setError(null);
       if (isRefresh) setRefreshing(true);
 
-      // Utiliser la nouvelle API de statistiques
+      console.log("🔍 [COMPONENT] About to call api.getStatistics()...");
       const statisticsData = await api.getStatistics();
+
+      console.log("🔍 [COMPONENT] statisticsData received:", statisticsData);
+      console.log("🔍 [COMPONENT] statisticsData type:", typeof statisticsData);
+      console.log(
+        "🔍 [COMPONENT] statisticsData keys:",
+        Object.keys(statisticsData || {})
+      );
+
       setStats(statisticsData);
+      console.log("🔍 [COMPONENT] setStats called with:", statisticsData);
     } catch (err: any) {
+      console.error("❌ [COMPONENT] Error in loadStatistics:", err);
+      console.error("❌ [COMPONENT] Error message:", err.message);
+      console.error("❌ [COMPONENT] Error stack:", err.stack);
       setError(err.message || "Impossible de charger les statistiques");
     } finally {
+      console.log("🔍 [COMPONENT] Finally block - setting loading to false");
       setLoading(false);
       setRefreshing(false);
     }
@@ -289,9 +306,32 @@ export default function StatisticsScreen() {
     loadStatistics(true);
   };
 
+  // useEffects pour logger les changements d'état
+  useEffect(() => {
+    console.log("🔍 [STATE] stats changed:", stats);
+  }, [stats]);
+
+  useEffect(() => {
+    console.log("🔍 [STATE] loading changed:", loading);
+  }, [loading]);
+
+  useEffect(() => {
+    console.log("🔍 [STATE] error changed:", error);
+  }, [error]);
+
   useEffect(() => {
     loadStatistics();
   }, []);
+
+  // Log avant le render
+  console.log(
+    "🔍 [RENDER] About to render - stats:",
+    !!stats,
+    "loading:",
+    loading,
+    "error:",
+    error
+  );
 
   if (loading && !stats) {
     return (
@@ -327,6 +367,17 @@ export default function StatisticsScreen() {
           }
           showsVerticalScrollIndicator={false}
         >
+          {/* Section de debug temporaire */}
+          <View className="p-4 bg-yellow-100 rounded-lg mb-4">
+            <Text className="font-bold text-lg">DEBUG INFO:</Text>
+            <Text>Stats exists: {stats ? "YES" : "NO"}</Text>
+            <Text>Loading: {loading ? "YES" : "NO"}</Text>
+            <Text>Error: {error || "NONE"}</Text>
+            <Text>
+              Stats keys: {stats ? Object.keys(stats).join(", ") : "N/A"}
+            </Text>
+          </View>
+
           {error && (
             <View className="mb-4 p-4 bg-red-50 rounded-xl">
               <Text className="text-red-600 text-center mb-2">{error}</Text>
@@ -341,6 +392,13 @@ export default function StatisticsScreen() {
 
           {stats && (
             <>
+              {/* Section de debug avec les données */}
+              <View className="p-4 bg-green-100 rounded-lg mb-4">
+                <Text className="font-bold">STATS LOADED!</Text>
+                <Text>Total Sessions: {stats.overview?.totalSessions}</Text>
+                <Text>JSON: {JSON.stringify(stats, null, 2)}</Text>
+              </View>
+
               {/* Vue d'ensemble - Grille 2x2 */}
               <View className="mb-6">
                 <Text className="text-lg font-bold mb-4">Vue d'ensemble</Text>
