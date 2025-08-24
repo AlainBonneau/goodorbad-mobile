@@ -36,6 +36,12 @@ export default function GameScreen() {
           </Pressable>
         </Link>
 
+        <Link href="/stats" asChild>
+          <Pressable className="bg-gray-100 p-2 rounded-lg">
+            <Text className="text-gray-700">📊 Statistiques</Text>
+          </Pressable>
+        </Link>
+
         <TextInput
           value={g.name}
           onChangeText={g.setName}

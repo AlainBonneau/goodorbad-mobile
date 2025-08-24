@@ -166,55 +166,8 @@ export default function StatisticsScreen() {
       setError(null);
       if (isRefresh) setRefreshing(true);
 
-      // Charger l'historique complet pour calculer les stats
-      const historyResponse = await api.getSessionHistory(1, 100);
-      const sessions = historyResponse.items;
-
-      // Calculer les statistiques
-      const totalSessions = sessions.length;
-      const officialSessions = sessions.filter((s) => s.isOfficialDaily).length;
-      const goodSessions = sessions.filter((s) => s.finalType === "GOOD");
-      const badSessions = sessions.filter((s) => s.finalType === "BAD");
-
-      // Calculer les streaks (séries de jours consécutifs)
-      const officialSessionsByDate = sessions
-        .filter((s) => s.isOfficialDaily)
-        .sort(
-          (a, b) =>
-            new Date(b.finalizedAt).getTime() -
-            new Date(a.finalizedAt).getTime()
-        );
-
-      const currentStreak = calculateCurrentStreak(officialSessionsByDate);
-      const longestStreak = calculateLongestStreak(officialSessionsByDate);
-
-      // Données mensuelles
-      const monthlyData = calculateMonthlyData(sessions);
-
-      // Heure favorite (approximative)
-      const topHour = calculateTopHour(sessions);
-
-      const statisticsData: StatisticsData = {
-        overview: {
-          totalSessions,
-          officialSessions,
-          currentStreak,
-          longestStreak,
-          goodPercentage:
-            totalSessions > 0
-              ? Math.round((goodSessions.length / totalSessions) * 100)
-              : 0,
-          badPercentage:
-            totalSessions > 0
-              ? Math.round((badSessions.length / totalSessions) * 100)
-              : 0,
-        },
-        monthlyData,
-        recentSessions: sessions.slice(0, 10),
-        topHour,
-        averageCardsPerSession: 5, // Toujours 5 cartes par session dans votre système
-      };
-
+      // Utiliser la nouvelle API de statistiques
+      const statisticsData = await api.getStatistics();
       setStats(statisticsData);
     } catch (err: any) {
       setError(err.message || "Impossible de charger les statistiques");

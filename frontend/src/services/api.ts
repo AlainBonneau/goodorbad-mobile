@@ -186,4 +186,27 @@ export const api = {
       return null;
     }
   },
+
+  // Méthode pour récupérer les statistiques
+  async getStatistics() {
+    const response = await fetch(`${BASE_URL}/api/v1/stats/statistics`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-owner-key": await getOwnerKey(),
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error?.message || `HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (!data.success) {
+      throw new Error(data.error?.message || "Unknown error");
+    }
+
+    return data.data;
+  },
 };

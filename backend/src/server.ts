@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import sessionsRouter from "./routers/sessions.router.js";
+import statsRouter from "./routers/stats.router.js";
 import swaggerUi from "swagger-ui-express";
 import fs from "fs";
 import path from "path";
@@ -54,6 +55,7 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/api/v1/sessions", sessionsRouter);
+app.use("/api/v1/stats", statsRouter);
 
 app.listen(3000, "0.0.0.0", () => {
   console.log("Server running on http://0.0.0.0:3000");
