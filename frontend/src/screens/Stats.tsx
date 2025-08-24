@@ -47,13 +47,10 @@ const MonthlyChart = ({ data }: { data: StatisticsData["monthlyData"] }) => {
       <Text className="text-lg font-bold mb-4 text-center">
         Évolution mensuelle
       </Text>
-      <View
-        className="flex-row justify-between items-end"
-        style={{ height: 120 }}
-      >
+      <View className="flex-row justify-between items-end h-32">
         {data.map((item, index) => (
           <View key={index} className="items-center flex-1">
-            <View className="w-full flex-col justify-end items-center mb-2">
+            <View className="w-full flex-col justify-end items-center mb-2 h-20">
               {/* Barre pour les bonnes cartes */}
               <View
                 className="bg-blue-500 w-6 rounded-t-sm"
@@ -361,141 +358,102 @@ export default function StatisticsScreen() {
         </View>
 
         <ScrollView
-          className="flex-1"
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
           showsVerticalScrollIndicator={false}
         >
-          {/* Section de debug temporaire */}
-          <View className="p-4 bg-yellow-100 rounded-lg mb-4">
-            <Text className="font-bold text-lg">DEBUG INFO:</Text>
-            <Text>Stats exists: {stats ? "YES" : "NO"}</Text>
-            <Text>Loading: {loading ? "YES" : "NO"}</Text>
-            <Text>Error: {error || "NONE"}</Text>
-            <Text>
-              Stats keys: {stats ? Object.keys(stats).join(", ") : "N/A"}
-            </Text>
-          </View>
+          {stats && (
+            <View className="bg-white rounded-xl p-4 mb-6 shadow-sm">
+              <Text className="text-lg font-bold mb-4">Vue d'ensemble</Text>
 
-          {error && (
-            <View className="mb-4 p-4 bg-red-50 rounded-xl">
-              <Text className="text-red-600 text-center mb-2">{error}</Text>
-              <Pressable
-                onPress={() => loadStatistics(true)}
-                className="bg-red-100 px-4 py-2 rounded-lg self-center"
-              >
-                <Text className="text-red-600 font-medium">Réessayer</Text>
-              </Pressable>
+              {/* Première ligne de cartes */}
+              <View className="flex-row mb-3">
+                <View className="bg-white rounded-xl p-4 flex-1 mr-2 shadow-sm">
+                  <Text className="text-sm text-gray-600 mb-2">
+                    Total parties
+                  </Text>
+                  <Text className="text-2xl font-extrabold text-blue-600">
+                    {stats.overview.totalSessions}
+                  </Text>
+                  <Text className="text-xs text-gray-500 mt-1">
+                    sessions jouées
+                  </Text>
+                </View>
+
+                <View className="bg-white rounded-xl p-4 flex-1 ml-2 shadow-sm">
+                  <Text className="text-sm text-gray-600 mb-2">
+                    Officielles
+                  </Text>
+                  <Text className="text-2xl font-extrabold text-amber-600">
+                    {stats.overview.officialSessions}
+                  </Text>
+                  <Text className="text-xs text-gray-500 mt-1">
+                    cartes du jour
+                  </Text>
+                </View>
+              </View>
+
+              {/* Deuxième ligne de cartes */}
+              <View className="flex-row">
+                <View className="bg-white rounded-xl p-4 flex-1 mr-2 shadow-sm">
+                  <Text className="text-sm text-gray-600 mb-2">
+                    Série actuelle
+                  </Text>
+                  <Text className="text-2xl font-extrabold text-green-600">
+                    {stats.overview.currentStreak}
+                  </Text>
+                  <Text className="text-xs text-gray-500 mt-1">
+                    jours en cours
+                  </Text>
+                </View>
+
+                <View className="bg-white rounded-xl p-4 flex-1 ml-2 shadow-sm">
+                  <Text className="text-sm text-gray-600 mb-2">Record</Text>
+                  <Text className="text-2xl font-extrabold text-purple-600">
+                    {stats.overview.longestStreak}
+                  </Text>
+                  <Text className="text-xs text-gray-500 mt-1">
+                    meilleure série
+                  </Text>
+                </View>
+              </View>
             </View>
           )}
 
+          {/* Répartition des résultats */}
           {stats && (
-            <>
-              {/* Section de debug avec les données */}
-              <View className="p-4 bg-green-100 rounded-lg mb-4">
-                <Text className="font-bold">STATS LOADED!</Text>
-                <Text>Total Sessions: {stats.overview?.totalSessions}</Text>
-                <Text>JSON: {JSON.stringify(stats, null, 2)}</Text>
+            <View className="bg-white rounded-xl p-4 mb-6 shadow-sm">
+              <Text className="text-lg font-bold mb-4 text-center">
+                Répartition des résultats
+              </Text>
+
+              {/* Barre de progression */}
+              <View className="h-6 bg-red-200 rounded-xl overflow-hidden mb-3">
+                <View
+                  className="h-full bg-blue-500 rounded-xl"
+                  style={{ width: `${stats.overview.goodPercentage}%` }}
+                />
               </View>
 
-              {/* Vue d'ensemble - Grille 2x2 */}
-              <View className="mb-6">
-                <Text className="text-lg font-bold mb-4">Vue d'ensemble</Text>
-                <View className="flex-row mb-3">
-                  <StatCard
-                    title="Total parties"
-                    value={stats.overview.totalSessions}
-                    subtitle="sessions jouées"
-                    colorClass="text-blue-600"
-                  />
-                  <StatCard
-                    title="Officielles"
-                    value={stats.overview.officialSessions}
-                    subtitle="cartes du jour"
-                    colorClass="text-amber-600"
-                  />
-                </View>
-                <View className="flex-row">
-                  <StatCard
-                    title="Série actuelle"
-                    value={`${stats.overview.currentStreak} jours`}
-                    subtitle="en cours"
-                    colorClass="text-green-600"
-                  />
-                  <StatCard
-                    title="Record"
-                    value={`${stats.overview.longestStreak} jours`}
-                    subtitle="meilleure série"
-                    colorClass="text-purple-600"
-                  />
-                </View>
-              </View>
-
-              {/* Répartition des résultats */}
-              <View className="bg-white rounded-xl p-4 mb-6 shadow-sm">
-                <Text className="text-lg font-bold mb-4 text-center">
-                  Répartition des résultats
-                </Text>
-
-                {/* Barre de progression */}
-                <View className="h-6 bg-red-100 rounded-full overflow-hidden mb-3">
-                  <View
-                    className="h-full bg-blue-500 rounded-full"
-                    style={{ width: `${stats.overview.goodPercentage}%` }}
-                  />
-                </View>
-
-                {/* Statistiques textuelles */}
-                <View className="flex-row justify-around">
-                  <View className="items-center">
-                    <Text className="text-2xl font-extrabold text-blue-600">
-                      {stats.overview.goodPercentage}%
-                    </Text>
-                    <Text className="text-sm text-gray-600">Bonnes cartes</Text>
-                  </View>
-                  <View className="items-center">
-                    <Text className="text-2xl font-extrabold text-red-600">
-                      {stats.overview.badPercentage}%
-                    </Text>
-                    <Text className="text-sm text-gray-600">
-                      Mauvaises cartes
-                    </Text>
-                  </View>
-                </View>
-              </View>
-
-              {/* Graphique mensuel */}
-              <MonthlyChart data={stats.monthlyData} />
-
-              {/* Sessions récentes */}
-              <RecentSessions sessions={stats.recentSessions} />
-
-              {/* Informations supplémentaires */}
-              <View className="bg-white rounded-xl p-4 mb-6 shadow-sm">
-                <Text className="text-lg font-bold mb-4">Habitudes</Text>
-                <View className="space-y-3">
-                  <Text className="text-gray-700 text-base">
-                    🎯 Moyenne de {stats.averageCardsPerSession} cartes par
-                    session
+              {/* Statistiques textuelles */}
+              <View className="flex-row justify-around">
+                <View className="items-center">
+                  <Text className="text-2xl font-extrabold text-blue-600">
+                    {stats.overview.goodPercentage}%
                   </Text>
-                  <Text className="text-gray-700 text-base">
-                    ⏰ Heure favorite: {stats.topHour}h00
+                  <Text className="text-sm text-gray-600">Bonnes cartes</Text>
+                </View>
+                <View className="items-center">
+                  <Text className="text-2xl font-extrabold text-red-600">
+                    {stats.overview.badPercentage}%
                   </Text>
-                  {stats.overview.totalSessions > 0 && (
-                    <Text className="text-gray-700 text-base">
-                      📊 Ratio officiel:{" "}
-                      {Math.round(
-                        (stats.overview.officialSessions /
-                          stats.overview.totalSessions) *
-                          100
-                      )}
-                      %
-                    </Text>
-                  )}
+                  <Text className="text-sm text-gray-600">
+                    Mauvaises cartes
+                  </Text>
                 </View>
               </View>
-            </>
+            </View>
           )}
         </ScrollView>
       </ScreenCard>

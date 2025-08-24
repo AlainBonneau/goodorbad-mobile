@@ -16,4 +16,8 @@ export interface StatisticsData {
   recentSessions: HistorySession[];
   topHour: number;
   averageCardsPerSession: number;
+  topTags: Array<{
+    tag: string;
+    count: number;
+  }>;
 }
