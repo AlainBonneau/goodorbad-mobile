@@ -171,7 +171,24 @@ export async function finalizeSession(req: Request, res: Response) {
     }
 
     const sessionId = String(req.params.id);
+    const todayUTC = startOfUTCDay();
 
+    // Vérifier d'abord si l'utilisateur a déjà joué aujourd'hui
+    const existingDaily = await prisma.dailyOutcome.findUnique({
+      where: { ownerKey_date: { ownerKey, date: todayUTC } },
+    });
+
+    if (existingDaily) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: "ALREADY_PLAYED_TODAY",
+          message: "Vous avez déjà tiré votre carte du jour. Revenez demain !",
+        },
+      });
+    }
+
+    // Continuer avec la logique existante...
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
       include: {
@@ -194,6 +211,7 @@ export async function finalizeSession(req: Request, res: Response) {
         error: { code: "SESSION_NOT_FOUND", message: "Session not found." },
       });
     }
+
     if (session.ownerKey !== ownerKey) {
       return res.status(403).json({
         success: false,
@@ -203,6 +221,7 @@ export async function finalizeSession(req: Request, res: Response) {
         },
       });
     }
+
     if (session.finalizedAt) {
       return res.status(400).json({
         success: false,
@@ -212,6 +231,7 @@ export async function finalizeSession(req: Request, res: Response) {
         },
       });
     }
+
     if (session.cards.length !== 5) {
       return res.status(400).json({
         success: false,
@@ -225,79 +245,9 @@ export async function finalizeSession(req: Request, res: Response) {
     const pickIndex = Math.floor(Math.random() * 5);
     const chosen = session.cards[pickIndex];
 
-    const todayUTC = startOfUTCDay();
-
-    // Vérifie s'il y a déjà une carte officielle du jour
-    const existingDaily = await prisma.dailyOutcome.findUnique({
-      where: { ownerKey_date: { ownerKey, date: todayUTC } },
-      select: { id: true },
-    });
-
-    if (!existingDaily) {
-      // Première finalisation du jour → officielle
-      const [updatedSession, daily] = await prisma.$transaction([
-        prisma.session.update({
-          where: { id: sessionId },
-          data: {
-            finalizedAt: new Date(),
-            finalCardId: chosen.id,
-            finalType: chosen.type as CardType,
-            finalLabel: chosen.labelSnapshot,
-            finalPickIndex: chosen.index,
-            isOfficialDaily: true,
-          },
-          select: {
-            id: true,
-            ownerKey: true,
-            seed: true,
-            startedAt: true,
-            finalizedAt: true,
-            finalCardId: true,
-            finalType: true,
-            finalLabel: true,
-            finalPickIndex: true,
-            isOfficialDaily: true,
-          },
-        }),
-        prisma.dailyOutcome.create({
-          data: {
-            ownerKey,
-            date: todayUTC,
-            sessionId,
-            finalCardId: chosen.id,
-            finalType: chosen.type,
-            finalLabel: chosen.labelSnapshot,
-          },
-          select: {
-            id: true,
-            ownerKey: true,
-            date: true,
-            sessionId: true,
-            finalCardId: true,
-            finalType: true,
-            finalLabel: true,
-            createdAt: true,
-          },
-        }),
-      ]);
-
-      return res.status(200).json({
-        success: true,
-        data: {
-          official: true,
-          final: {
-            cardId: updatedSession.finalCardId,
-            type: updatedSession.finalType,
-            label: updatedSession.finalLabel,
-            pickIndex: updatedSession.finalPickIndex,
-          },
-          session: updatedSession,
-          dailyOutcome: daily,
-        },
-      });
-    } else {
-      // Une carte officielle existe déjà aujourd’hui → partie “fun”
-      const updatedSession = await prisma.session.update({
+    // Transaction pour finaliser la session et créer le daily outcome
+    const [updatedSession, daily] = await prisma.$transaction([
+      prisma.session.update({
         where: { id: sessionId },
         data: {
           finalizedAt: new Date(),
@@ -305,37 +255,37 @@ export async function finalizeSession(req: Request, res: Response) {
           finalType: chosen.type as CardType,
           finalLabel: chosen.labelSnapshot,
           finalPickIndex: chosen.index,
-          isOfficialDaily: false,
-        },
-        select: {
-          id: true,
-          ownerKey: true,
-          seed: true,
-          startedAt: true,
-          finalizedAt: true,
-          finalCardId: true,
-          finalType: true,
-          finalLabel: true,
-          finalPickIndex: true,
           isOfficialDaily: true,
         },
-      });
-
-      return res.status(200).json({
-        success: true,
+      }),
+      prisma.dailyOutcome.create({
         data: {
-          official: false,
-          final: {
-            cardId: updatedSession.finalCardId,
-            type: updatedSession.finalType,
-            label: updatedSession.finalLabel,
-            pickIndex: updatedSession.finalPickIndex,
-          },
-          session: updatedSession,
-          dailyOutcome: null,
+          ownerKey,
+          date: todayUTC,
+          sessionId,
+          finalCardId: chosen.id,
+          finalType: chosen.type,
+          finalLabel: chosen.labelSnapshot,
         },
-      });
-    }
+      }),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        official: true,
+        final: {
+          cardId: updatedSession.finalCardId,
+          type: updatedSession.finalType,
+          label: updatedSession.finalLabel,
+          pickIndex: updatedSession.finalPickIndex,
+        },
+        session: updatedSession,
+        dailyOutcome: daily,
+        message:
+          "Carte du jour révélée ! Revenez demain pour une nouvelle carte.",
+      },
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).json({
@@ -538,6 +488,152 @@ export async function getSessionHistory(req: Request, res: Response) {
     });
   } catch (err) {
     console.error(err);
+    return res.status(500).json({
+      success: false,
+      error: { code: "INTERNAL_ERROR", message: "Unexpected server error." },
+    });
+  }
+}
+
+export async function getDailySession(req: Request, res: Response) {
+  try {
+    const ownerKey = String(req.header("x-owner-key") || "").trim();
+
+    if (!ownerKey) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: "OWNER_KEY_REQUIRED",
+          message: "L'en-tête x-owner-key est requis.",
+        },
+      });
+    }
+
+    const todayUTC = startOfUTCDay();
+
+    // Vérifier s'il existe déjà un outcome pour aujourd'hui
+    const existingOutcome = await prisma.dailyOutcome.findUnique({
+      where: { ownerKey_date: { ownerKey, date: todayUTC } },
+      include: {
+        session: {
+          include: {
+            cards: {
+              orderBy: { index: "asc" },
+            },
+          },
+        },
+      },
+    });
+
+    if (existingOutcome) {
+      // L'utilisateur a déjà joué aujourd'hui
+      return res.status(200).json({
+        success: true,
+        data: {
+          session: existingOutcome.session,
+          dailyOutcome: existingOutcome,
+          canPlay: false,
+          message: "Vous avez déjà tiré votre carte du jour",
+        },
+      });
+    }
+
+    // Pas de résultat aujourd'hui, vérifier s'il y a une session en cours
+    const pendingSession = await prisma.session.findFirst({
+      where: {
+        ownerKey,
+        finalizedAt: null,
+        // On peut ajouter un filtre sur la date de création pour éviter les sessions trop anciennes
+        startedAt: {
+          gte: new Date(Date.now() - 24 * 60 * 60 * 1000), // Dernières 24h
+        },
+      },
+      include: {
+        cards: {
+          orderBy: { index: "asc" },
+        },
+      },
+    });
+
+    if (pendingSession && pendingSession.cards.length === 5) {
+      // Il y a une session en cours avec 5 cartes
+      return res.status(200).json({
+        success: true,
+        data: {
+          session: pendingSession,
+          dailyOutcome: null,
+          canPlay: true,
+          message: "Session en cours - vous pouvez finaliser votre choix",
+        },
+      });
+    }
+
+    // Créer une nouvelle session daily
+    const seed = crypto.randomUUID();
+    const session = await prisma.session.create({
+      data: {
+        ownerKey,
+        seed,
+      },
+    });
+
+    // Tirer automatiquement 5 cartes
+    const cards = [];
+    for (let i = 0; i < 5; i++) {
+      const randomValue = Math.random();
+      const type = randomValue < 0.5 ? CardType.GOOD : CardType.BAD;
+
+      // Récupérer les templates disponibles
+      const candidates = await prisma.cardTemplate.findMany({
+        where: { isActive: true, type },
+        select: { id: true, label: true, weight: true },
+      });
+
+      let chosenTemplateId: string | null = null;
+      let labelSnapshot =
+        type === CardType.GOOD ? "Bonne carte" : "Mauvaise carte";
+
+      if (candidates.length > 0) {
+        const chosen = pickWeighted(candidates);
+        chosenTemplateId = chosen.id;
+        labelSnapshot = chosen.label;
+      }
+
+      const card = await prisma.sessionCard.create({
+        data: {
+          sessionId: session.id,
+          index: i,
+          type,
+          cardTemplateId: chosenTemplateId,
+          labelSnapshot,
+          randomValue,
+        },
+      });
+
+      cards.push(card);
+    }
+
+    // Récupérer la session complète avec les cartes
+    const completeSession = await prisma.session.findUnique({
+      where: { id: session.id },
+      include: {
+        cards: {
+          orderBy: { index: "asc" },
+        },
+      },
+    });
+
+    return res.status(201).json({
+      success: true,
+      data: {
+        session: completeSession,
+        dailyOutcome: null,
+        canPlay: true,
+        message: "Nouvelle session daily créée - choisissez votre carte",
+      },
+    });
+  } catch (err) {
+    console.error("Error in getDailySession:", err);
     return res.status(500).json({
       success: false,
       error: { code: "INTERNAL_ERROR", message: "Unexpected server error." },

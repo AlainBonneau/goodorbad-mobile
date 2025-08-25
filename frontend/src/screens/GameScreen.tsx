@@ -42,6 +42,12 @@ export default function GameScreen() {
           </Pressable>
         </Link>
 
+        <Link href="/daily" asChild>
+          <Pressable className="bg-gray-100 p-2 rounded-lg">
+            <Text className="text-gray-700">📊 Daily</Text>
+          </Pressable>
+        </Link>
+
         <TextInput
           value={g.name}
           onChangeText={g.setName}

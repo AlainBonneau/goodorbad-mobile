@@ -176,13 +176,15 @@ export const api = {
 
   async getDailyOutcome(): Promise<{ dailyOutcome: any } | null> {
     try {
+      // Utiliser l'endpoint correct selon votre route
       const response = await http<{
         success: boolean;
-        data: { dailyOutcome: any };
-      }>(`/api/v1/sessions/daily-outcome`);
+        data: any;
+      }>(`/api/v1/sessions/daily-outcome`); // ou `/api/v1/sessions/daily/daily-outcome` selon votre route
 
       return response.data;
     } catch (error) {
+      console.log("Pas de daily outcome trouvé:", error);
       return null;
     }
   },
@@ -207,4 +209,101 @@ export const api = {
       throw error;
     }
   },
+
+  // Méthode pour récupérer la carte du jour
+  async getDailyCard(): Promise<Card | null> {
+    try {
+      const response = await http<{
+        success: boolean;
+        data: { card: Card };
+      }>(`/api/v1/sessions/:id/daily-outcome`);
+
+      return response.data.card;
+    } catch (error) {
+      return null;
+    }
+  },
+
+  async getDailySession(): Promise<{
+    session: Session;
+    dailyOutcome?: DailyOutcome;
+    canPlay: boolean;
+  }> {
+    try {
+      const todayOutcome = await this.getDailyOutcome();
+
+      if (todayOutcome?.dailyOutcome) {
+        const sessionData = await this.getSession(
+          todayOutcome.dailyOutcome.sessionId
+        );
+
+        const session = {
+          id: todayOutcome.dailyOutcome.sessionId,
+          ownerKey: "",
+          seed: "",
+          startedAt: todayOutcome.dailyOutcome.createdAt,
+          finalizedAt: todayOutcome.dailyOutcome.createdAt,
+          finalCardId: todayOutcome.dailyOutcome.finalCardId,
+          finalType: todayOutcome.dailyOutcome.finalType,
+          finalLabel: todayOutcome.dailyOutcome.finalLabel,
+          finalPickIndex: sessionData.finalPickIndex,
+          isOfficialDaily: true,
+          cards: sessionData.draws.map((card: any, index: number) => ({
+            id: card.id,
+            index,
+            type: card.type.toUpperCase(),
+            labelSnapshot: card.label,
+            randomValue: Math.random(),
+          })),
+        };
+
+        return {
+          session,
+          dailyOutcome: todayOutcome.dailyOutcome,
+          canPlay: false,
+        };
+      }
+
+      const newSession = await this.createSession(
+        "Session quotidienne du " + new Date().toLocaleDateString()
+      );
+
+      // Tirer les 5 cartes
+      const cards = [];
+      for (let i = 0; i < 5; i++) {
+        const drawResult = await this.draw(newSession.id);
+        cards.push({
+          id: drawResult.card.id,
+          index: i,
+          type: drawResult.card.type.toUpperCase(),
+          labelSnapshot: drawResult.card.label,
+          randomValue: Math.random(),
+        });
+      }
+
+      const session = {
+        id: newSession.id,
+        ownerKey: "",
+        seed: "",
+        startedAt: new Date().toISOString(),
+        finalizedAt: null,
+        finalCardId: null,
+        finalType: null,
+        finalLabel: null,
+        finalPickIndex: null,
+        isOfficialDaily: true,
+        cards,
+      };
+
+      return {
+        session,
+        canPlay: true,
+      };
+    } catch (error) {
+      console.error("Erreur getDailySession:", error);
+      throw error;
+    }
+  },
 };
+
+// Finir plus tard

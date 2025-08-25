@@ -31,8 +31,8 @@ const actionsLimiter = rateLimit({
 
 router.get("/:id", getSession);
 router.get(
-  "/:id/daily-outcome",
-  validate({ headers: ownerKeyHeaderSchema, params: sessionIdParamsSchema }),
+  "/daily-outcome", 
+  validate({ headers: ownerKeyHeaderSchema }),
   asyncHandler(getDailyOutcome)
 );
 router.get(
