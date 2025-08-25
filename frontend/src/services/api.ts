@@ -129,7 +129,7 @@ export const api = {
       `/api/v1/sessions/${id}/finalize`,
       {
         method: "POST",
-        body: JSON.stringify({}), // N'envoie pas l'index, laisse le backend choisir
+        body: JSON.stringify({}),
       }
     );
 
