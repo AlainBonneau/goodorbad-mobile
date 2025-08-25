@@ -18,6 +18,112 @@ import type { DailyOutcome, DailyStats } from "../types/daily";
 
 const { width } = Dimensions.get("window");
 
+// Composant pour afficher la carte du jour sélectionnée
+const SelectedDailyCard = ({
+  card,
+  date,
+}: {
+  card: SessionCard;
+  date: string;
+}) => {
+  const [pulseAnim] = useState(new Animated.Value(1));
+
+  useEffect(() => {
+    const pulse = () => {
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1.05,
+          duration: 1500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 1,
+          duration: 1500,
+          useNativeDriver: true,
+        }),
+      ]).start(() => pulse());
+    };
+    pulse();
+  }, []);
+
+  return (
+    <Animated.View
+      style={{ transform: [{ scale: pulseAnim }] }}
+      className="mb-6"
+    >
+      <View
+        className={`rounded-2xl p-6 shadow-xl border-3 ${
+          card.type === "GOOD"
+            ? "bg-gradient-to-br from-green-50 to-emerald-100 border-green-400"
+            : "bg-gradient-to-br from-red-50 to-rose-100 border-red-400"
+        }`}
+      >
+        {/* Header de la carte */}
+        <View className="items-center mb-4">
+          <Text className="text-lg font-bold text-gray-700 mb-1">
+            🎴 Votre carte du jour
+          </Text>
+          <Text className="text-sm text-gray-600">
+            {new Date(date).toLocaleDateString("fr-FR", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+            })}
+          </Text>
+        </View>
+
+        {/* Icône et titre principal */}
+        <View className="items-center mb-4">
+          <Text className="text-6xl mb-3">
+            {card.type === "GOOD" ? "🍀" : "💔"}
+          </Text>
+          <Text
+            className={`text-2xl font-bold text-center ${
+              card.type === "GOOD" ? "text-green-700" : "text-red-700"
+            }`}
+          >
+            {card.labelSnapshot}
+          </Text>
+        </View>
+
+        {/* Message inspirant */}
+        <View
+          className={`rounded-xl p-4 ${
+            card.type === "GOOD"
+              ? "bg-green-100 border border-green-200"
+              : "bg-red-100 border border-red-200"
+          }`}
+        >
+          <Text
+            className={`text-center text-base leading-6 ${
+              card.type === "GOOD" ? "text-green-800" : "text-red-800"
+            }`}
+          >
+            {card.type === "GOOD"
+              ? "✨ Une belle énergie vous accompagne aujourd'hui ! Profitez de cette guidance positive pour illuminer votre journée."
+              : "🛡️ Restez vigilant et gardez confiance. Les défis vous rendent plus fort et vous préparent à de meilleurs jours."}
+          </Text>
+        </View>
+
+        {/* Badge de type */}
+        <View className="items-center mt-4">
+          <View
+            className={`px-4 py-2 rounded-full ${
+              card.type === "GOOD" ? "bg-green-500" : "bg-red-500"
+            }`}
+          >
+            <Text className="text-white font-bold text-sm">
+              {card.type === "GOOD"
+                ? "🌟 ÉNERGIE POSITIVE"
+                : "⚠️ VIGILANCE REQUISE"}
+            </Text>
+          </View>
+        </View>
+      </View>
+    </Animated.View>
+  );
+};
+
 // Composant pour une carte à sélectionner
 const SelectableCard = ({
   card,
@@ -514,16 +620,26 @@ export default function DailyCardScreen() {
             totalDays={stats.totalDays}
           />
 
-          {/* Question du jour */}
-          <View className="bg-white rounded-xl p-6 mb-6 shadow-sm">
-            <Text className="text-lg font-bold text-center text-gray-800 mb-2">
-              Votre guidance du jour
-            </Text>
-            <Text className="text-base text-gray-600 text-center leading-6">
-              Quelle énergie vous accompagnera aujourd'hui ? Choisissez une
-              carte et découvrez votre message.
-            </Text>
-          </View>
+          {/* Carte du jour sélectionnée - affichée en grand si déjà révélée */}
+          {isRevealed && selectedCardIndex !== null && session && (
+            <SelectedDailyCard
+              card={session.cards[selectedCardIndex]}
+              date={session.startedAt}
+            />
+          )}
+
+          {/* Question du jour - cachée si carte déjà révélée */}
+          {!isRevealed && (
+            <View className="bg-white rounded-xl p-6 mb-6 shadow-sm">
+              <Text className="text-lg font-bold text-center text-gray-800 mb-2">
+                Votre guidance du jour
+              </Text>
+              <Text className="text-base text-gray-600 text-center leading-6">
+                Quelle énergie vous accompagnera aujourd'hui ? Choisissez une
+                carte et découvrez votre message.
+              </Text>
+            </View>
+          )}
 
           {/* Message dynamique */}
           {message && (
@@ -552,6 +668,18 @@ export default function DailyCardScreen() {
               </Text>
               <Text className="text-orange-700 text-xl font-bold text-center">
                 {timeUntilNext}
+              </Text>
+            </View>
+          )}
+
+          {/* Section "Autres cartes" si carte déjà révélée */}
+          {isRevealed && (
+            <View className="mb-4">
+              <Text className="text-lg font-bold text-gray-700 mb-3 text-center">
+                Les autres cartes de cette session
+              </Text>
+              <Text className="text-sm text-gray-500 text-center mb-4">
+                Voici ce que contenaient les autres cartes aujourd'hui
               </Text>
             </View>
           )}

@@ -157,7 +157,10 @@ export async function drawCard(req: Request, res: Response) {
 }
 
 // Contrôleur de finalisation de session
-export async function finalizeSession(req: Request, res: Response) {
+export async function finalizeSessionWithDailyCheck(
+  req: Request,
+  res: Response
+) {
   try {
     const ownerKey = String(req.header("x-owner-key") || "").trim();
     if (!ownerKey) {
@@ -173,7 +176,6 @@ export async function finalizeSession(req: Request, res: Response) {
     const sessionId = String(req.params.id);
     const todayUTC = startOfUTCDay();
 
-    // Vérifier d'abord si l'utilisateur a déjà joué aujourd'hui
     const existingDaily = await prisma.dailyOutcome.findUnique({
       where: { ownerKey_date: { ownerKey, date: todayUTC } },
     });
@@ -188,7 +190,6 @@ export async function finalizeSession(req: Request, res: Response) {
       });
     }
 
-    // Continuer avec la logique existante...
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
       include: {
@@ -245,7 +246,6 @@ export async function finalizeSession(req: Request, res: Response) {
     const pickIndex = Math.floor(Math.random() * 5);
     const chosen = session.cards[pickIndex];
 
-    // Transaction pour finaliser la session et créer le daily outcome
     const [updatedSession, daily] = await prisma.$transaction([
       prisma.session.update({
         where: { id: sessionId },

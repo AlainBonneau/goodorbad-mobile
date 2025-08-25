@@ -3,7 +3,7 @@ import rateLimit from "express-rate-limit";
 import {
   createSession,
   drawCard,
-  finalizeSession,
+  finalizeSessionWithDailyCheck,
   getSession,
   getDailyOutcome,
   getSessionHistory,
@@ -31,7 +31,7 @@ const actionsLimiter = rateLimit({
 
 router.get("/:id", getSession);
 router.get(
-  "/daily-outcome", 
+  "/daily-outcome",
   validate({ headers: ownerKeyHeaderSchema }),
   asyncHandler(getDailyOutcome)
 );
@@ -59,7 +59,7 @@ router.post(
   "/:id/finalize",
   validate({ headers: ownerKeyHeaderSchema, params: sessionIdParamsSchema }),
   actionsLimiter,
-  asyncHandler(finalizeSession)
+  asyncHandler(finalizeSessionWithDailyCheck)
 );
 
 export default router;

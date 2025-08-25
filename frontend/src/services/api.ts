@@ -1,5 +1,7 @@
 import { Card } from "../types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import type { Session, SessionCard } from "../types/session";
+import type { DailyOutcome } from "../types/daily";
 
 const BASE_URL =
   process.env.EXPO_PUBLIC_API_BASE_URL || "http://localhost:3000";
@@ -95,6 +97,7 @@ export const api = {
     };
   },
 
+  // Méthode pour piocher une carte
   async draw(id: string): Promise<{ card: Card }> {
     const response = await http<{ success: boolean; data: { card: any } }>(
       `/api/v1/sessions/${id}/draw`,
@@ -105,11 +108,10 @@ export const api = {
 
     console.log("🔍 Raw backend card response:", response.data.card);
 
-    // Adapte la réponse backend au format attendu par le frontend
     const backendCard = response.data.card;
     const adaptedCard = {
       id: backendCard.id,
-      type: backendCard.type.toLowerCase(), // "GOOD" -> "good"
+      type: backendCard.type.toLowerCase(),
       label:
         backendCard.labelSnapshot || backendCard.label || "Carte sans texte",
     };
@@ -121,6 +123,7 @@ export const api = {
     };
   },
 
+  // Méthode pour finaliser le tirage
   async finalPick(
     id: string,
     index: number
@@ -174,13 +177,13 @@ export const api = {
     };
   },
 
-  async getDailyOutcome(): Promise<{ dailyOutcome: any } | null> {
+  // Méthode pour récupérer le résultat quotidien
+  async getDailyOutcome(): Promise<{ dailyOutcome: DailyOutcome } | null> {
     try {
-      // Utiliser l'endpoint correct selon votre route
       const response = await http<{
         success: boolean;
-        data: any;
-      }>(`/api/v1/sessions/daily-outcome`); // ou `/api/v1/sessions/daily/daily-outcome` selon votre route
+        data: { dailyOutcome: DailyOutcome };
+      }>(`/api/v1/sessions/daily-outcome`);
 
       return response.data;
     } catch (error) {
@@ -210,94 +213,50 @@ export const api = {
     }
   },
 
-  // Méthode pour récupérer la carte du jour
-  async getDailyCard(): Promise<Card | null> {
-    try {
-      const response = await http<{
-        success: boolean;
-        data: { card: Card };
-      }>(`/api/v1/sessions/:id/daily-outcome`);
-
-      return response.data.card;
-    } catch (error) {
-      return null;
-    }
-  },
-
+  // Récupérer ou créer la session daily du jour
   async getDailySession(): Promise<{
     session: Session;
     dailyOutcome?: DailyOutcome;
     canPlay: boolean;
+    message?: string;
   }> {
     try {
-      const todayOutcome = await this.getDailyOutcome();
-
-      if (todayOutcome?.dailyOutcome) {
-        const sessionData = await this.getSession(
-          todayOutcome.dailyOutcome.sessionId
-        );
-
-        const session = {
-          id: todayOutcome.dailyOutcome.sessionId,
-          ownerKey: "",
-          seed: "",
-          startedAt: todayOutcome.dailyOutcome.createdAt,
-          finalizedAt: todayOutcome.dailyOutcome.createdAt,
-          finalCardId: todayOutcome.dailyOutcome.finalCardId,
-          finalType: todayOutcome.dailyOutcome.finalType,
-          finalLabel: todayOutcome.dailyOutcome.finalLabel,
-          finalPickIndex: sessionData.finalPickIndex,
-          isOfficialDaily: true,
-          cards: sessionData.draws.map((card: any, index: number) => ({
-            id: card.id,
-            index,
-            type: card.type.toUpperCase(),
-            labelSnapshot: card.label,
-            randomValue: Math.random(),
-          })),
+      const response = await http<{
+        success: boolean;
+        data: {
+          session: any;
+          dailyOutcome?: DailyOutcome;
+          canPlay: boolean;
+          message?: string;
         };
+      }>(`/api/v1/sessions/daily/session`);
 
-        return {
-          session,
-          dailyOutcome: todayOutcome.dailyOutcome,
-          canPlay: false,
-        };
-      }
-
-      const newSession = await this.createSession(
-        "Session quotidienne du " + new Date().toLocaleDateString()
-      );
-
-      // Tirer les 5 cartes
-      const cards = [];
-      for (let i = 0; i < 5; i++) {
-        const drawResult = await this.draw(newSession.id);
-        cards.push({
-          id: drawResult.card.id,
-          index: i,
-          type: drawResult.card.type.toUpperCase(),
-          labelSnapshot: drawResult.card.label,
-          randomValue: Math.random(),
-        });
-      }
-
-      const session = {
-        id: newSession.id,
-        ownerKey: "",
-        seed: "",
-        startedAt: new Date().toISOString(),
-        finalizedAt: null,
-        finalCardId: null,
-        finalType: null,
-        finalLabel: null,
-        finalPickIndex: null,
-        isOfficialDaily: true,
-        cards,
+      const sessionData = response.data.session;
+      const adaptedSession: Session = {
+        id: sessionData.id,
+        ownerKey: sessionData.ownerKey || "",
+        seed: sessionData.seed || "",
+        startedAt: sessionData.startedAt,
+        finalizedAt: sessionData.finalizedAt,
+        finalCardId: sessionData.finalCardId,
+        finalType: sessionData.finalType,
+        finalLabel: sessionData.finalLabel,
+        finalPickIndex: sessionData.finalPickIndex,
+        isOfficialDaily: sessionData.isOfficialDaily || true,
+        cards: (sessionData.cards || []).map((card: any, index: number) => ({
+          id: card.id,
+          index: card.index !== undefined ? card.index : index,
+          type: card.type.toUpperCase() as "GOOD" | "BAD",
+          labelSnapshot: card.labelSnapshot || card.label || "Carte sans texte",
+          randomValue: card.randomValue || Math.random(),
+        })),
       };
 
       return {
-        session,
-        canPlay: true,
+        session: adaptedSession,
+        dailyOutcome: response.data.dailyOutcome,
+        canPlay: response.data.canPlay,
+        message: response.data.message,
       };
     } catch (error) {
       console.error("Erreur getDailySession:", error);
@@ -305,5 +264,3 @@ export const api = {
     }
   },
 };
-
-// Finir plus tard

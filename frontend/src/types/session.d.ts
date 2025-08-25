@@ -2,7 +2,7 @@ export interface SessionCard {
   id: string;
   index: number;
   type: "GOOD" | "BAD";
-  labelSnapshot: string;
+  labelSnapshot?: string;
   randomValue: number;
 }
 
