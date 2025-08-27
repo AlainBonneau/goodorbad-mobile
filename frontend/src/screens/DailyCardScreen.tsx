@@ -277,14 +277,11 @@ export default function DailyCardScreen() {
   // Calculer le temps restant jusqu'à demain
   const calculateTimeUntilNext = (lastPlayTime: string): string => {
     const now = new Date();
-
-    // Prochaine minuit (début du jour suivant)
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
 
     const diff = tomorrow.getTime() - now.getTime();
-
     if (diff <= 0) return "";
 
     const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -293,69 +290,83 @@ export default function DailyCardScreen() {
     return `${hours}h ${minutes}min`;
   };
 
-  // Fonction pour charger la session daily
-  const loadDailySession = async () => {
+  // Fonction helper pour récupérer un résultat existant
+  const tryGetExistingOutcome = async (): Promise<DailyOutcome | null> => {
     try {
-      setLoading(true);
+      const todayOutcome = await api.getDailyOutcome();
+      return todayOutcome?.dailyOutcome || null;
+    } catch (error) {
+      console.log("Pas de résultat existant trouvé");
+      return null;
+    }
+  };
 
-      try {
-        const todayOutcome = await api.getDailyOutcome();
-        if (todayOutcome && todayOutcome.dailyOutcome) {
-          setDailyOutcome(todayOutcome.dailyOutcome);
-          setCanPlayToday(false);
-          setIsRevealed(true);
+  // Fonction helper pour adapter les données de session (évite la duplication)
+  const createAdaptedSession = (
+    outcome: DailyOutcome,
+    sessionData: any
+  ): Session => {
+    return {
+      id: outcome.sessionId,
+      ownerKey: "",
+      seed: "",
+      startedAt: outcome.createdAt,
+      finalizedAt: outcome.createdAt,
+      finalCardId: outcome.finalCardId,
+      finalType: outcome.finalType,
+      finalLabel: outcome.finalLabel,
+      finalPickIndex: sessionData.finalPickIndex,
+      isOfficialDaily: true,
+      cards: sessionData.draws.map((card: any, index: number) => ({
+        id: card.id,
+        index,
+        type: card.type.toUpperCase() as "GOOD" | "BAD",
+        labelSnapshot: card.labelSnapshot || card.label,
+        randomValue: Math.random(),
+      })),
+    };
+  };
 
-          // Récupérer la session complète
-          const sessionData = await api.getSession(
-            todayOutcome.dailyOutcome.sessionId
-          );
+  // Fonction helper pour gérer un résultat existant
+  const handleExistingOutcome = async (outcome: DailyOutcome) => {
+    console.log("Résultat trouvé pour aujourd'hui:", outcome);
 
-          // Adapter les données de session
-          const adaptedSession: Session = {
-            id: todayOutcome.dailyOutcome.sessionId,
-            ownerKey: "",
-            seed: "",
-            startedAt: todayOutcome.dailyOutcome.createdAt,
-            finalizedAt: todayOutcome.dailyOutcome.createdAt,
-            finalCardId: todayOutcome.dailyOutcome.finalCardId,
-            finalType: todayOutcome.dailyOutcome.finalType,
-            finalLabel: todayOutcome.dailyOutcome.finalLabel,
-            finalPickIndex: sessionData.finalPickIndex,
-            isOfficialDaily: true,
-            cards: sessionData.draws.map((card: any, index: number) => ({
-              id: card.id,
-              index,
-              type: card.type.toUpperCase() as "GOOD" | "BAD",
-              labelSnapshot: card.labelSnapshot || card.label,
-              randomValue: Math.random(),
-            })),
-          };
+    setDailyOutcome(outcome);
+    setCanPlayToday(false);
+    setIsRevealed(true);
 
-          setSession(adaptedSession);
+    try {
+      // Récupérer la session complète
+      const sessionData = await api.getSession(outcome.sessionId);
+      const adaptedSession = createAdaptedSession(outcome, sessionData);
 
-          if (sessionData.finalPickIndex !== undefined) {
-            setSelectedCardIndex(sessionData.finalPickIndex);
-          }
+      setSession(adaptedSession);
 
-          // Calculer le temps jusqu'à demain
-          const nextTime = calculateTimeUntilNext(
-            todayOutcome.dailyOutcome.createdAt
-          );
-          setTimeUntilNext(nextTime);
-          setMessage("Vous avez déjà tiré votre carte aujourd'hui !");
-
-          return;
-        }
-      } catch (error) {
-        console.log(
-          "Pas de résultat pour aujourd'hui, création d'une nouvelle session"
-        );
+      if (sessionData.finalPickIndex !== undefined) {
+        setSelectedCardIndex(sessionData.finalPickIndex);
       }
 
-      // Créer une nouvelle session pour aujourd'hui
+      // Calculer le temps jusqu'à demain
+      const nextTime = calculateTimeUntilNext(outcome.createdAt);
+      setTimeUntilNext(nextTime);
+      setMessage("Vous avez déjà tiré votre carte aujourd'hui !");
+    } catch (error) {
+      console.error("Erreur lors de la récupération de la session:", error);
+      // Fallback : afficher juste le message sans les détails
+      setMessage("Vous avez déjà tiré votre carte aujourd'hui !");
+    }
+  };
+
+  // Fonction helper pour créer une nouvelle session
+  const createNewDailySession = async () => {
+    try {
+      console.log("Création d'une nouvelle session quotidienne...");
+
       const newSession = await api.createSession(
         "Session quotidienne du " + new Date().toLocaleDateString()
       );
+
+      console.log("Nouvelle session créée:", newSession.id);
 
       // Tirer 5 cartes
       const cards: SessionCard[] = [];
@@ -387,27 +398,55 @@ export default function DailyCardScreen() {
 
       setSession(adaptedSession);
       setCanPlayToday(true);
+      setIsRevealed(false);
       setMessage(
         "Choisissez votre carte du jour parmi les 5 tirées pour vous !"
       );
-    } catch (error) {
-      console.error(
-        "Erreur lors du chargement de la session quotidienne:",
-        error
-      );
-
+    } catch (createError) {
       if (
-        error instanceof Error &&
-        error.message.includes("ALREADY_PLAYED_TODAY")
+        createError instanceof Error &&
+        createError.message.includes("ALREADY_PLAYED_TODAY")
       ) {
-        Alert.alert(
-          "Déjà joué !",
-          "Vous avez déjà tiré votre carte du jour. Revenez demain pour une nouvelle guidance !",
-          [{ text: "OK", onPress: () => router.push("/") }]
-        );
+        console.log("L'utilisateur a déjà joué, récupération des données...");
+
+        // Essayer une dernière fois de récupérer les données
+        const outcome = await tryGetExistingOutcome();
+        if (outcome) {
+          await handleExistingOutcome(outcome);
+        } else {
+          // Si toujours pas de données, afficher message générique
+          setCanPlayToday(false);
+          setMessage("Vous avez déjà tiré votre carte aujourd'hui !");
+          Alert.alert(
+            "Déjà joué !",
+            "Vous avez déjà tiré votre carte du jour. Revenez demain pour une nouvelle guidance !",
+            [{ text: "OK", onPress: () => router.push("/") }]
+          );
+        }
       } else {
-        Alert.alert("Erreur", "Impossible de charger votre carte du jour");
+        // Autres erreurs
+        throw createError;
       }
+    }
+  };
+
+  // Fonction principale pour charger la session daily
+  const loadDailySession = async () => {
+    try {
+      setLoading(true);
+
+      // 1. Toujours essayer de récupérer un résultat existant d'abord
+      const existingOutcome = await tryGetExistingOutcome();
+      if (existingOutcome) {
+        await handleExistingOutcome(existingOutcome);
+        return;
+      }
+
+      // 2. Si pas de résultat existant, créer une nouvelle session
+      await createNewDailySession();
+    } catch (error) {
+      console.error("Erreur générale:", error);
+      Alert.alert("Erreur", "Impossible de charger votre carte du jour");
     } finally {
       setLoading(false);
     }
@@ -437,15 +476,24 @@ export default function DailyCardScreen() {
 
   // Sélectionner une carte
   const handleCardSelect = (index: number) => {
-    if (isRevealed || !canPlayToday) return;
+    // Empêcher la sélection si l'utilisateur ne peut pas jouer
+    if (!canPlayToday || isRevealed) return;
     setSelectedCardIndex(index);
   };
 
   // Finaliser la session avec la carte choisie
   const handleRevealCard = async () => {
-    if (selectedCardIndex === null || !session || !canPlayToday) return;
+    if (
+      selectedCardIndex === null ||
+      !session ||
+      !canPlayToday ||
+      isSubmitting
+    ) {
+      return;
+    }
 
     setIsSubmitting(true);
+
     try {
       const result = await api.finalPick(session.id, selectedCardIndex);
 
@@ -491,8 +539,20 @@ export default function DailyCardScreen() {
           "Vous avez déjà tiré votre carte du jour. La page va se recharger.",
           [{ text: "OK", onPress: () => loadDailySession() }]
         );
+      } else if (
+        error instanceof Error &&
+        error.message.includes("SESSION_NOT_FOUND")
+      ) {
+        Alert.alert(
+          "Session expirée",
+          "Votre session a expiré. Une nouvelle session va être créée.",
+          [{ text: "OK", onPress: () => loadDailySession() }]
+        );
       } else {
-        Alert.alert("Erreur", "Impossible de finaliser votre choix");
+        Alert.alert(
+          "Erreur",
+          "Impossible de finaliser votre choix. Veuillez réessayer."
+        );
       }
     } finally {
       setIsSubmitting(false);
@@ -537,16 +597,6 @@ export default function DailyCardScreen() {
 
     return () => clearInterval(interval);
   }, []);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("fr-FR", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
 
   const getCurrentDate = () => {
     return new Date().toLocaleDateString("fr-FR", {
@@ -629,7 +679,7 @@ export default function DailyCardScreen() {
           )}
 
           {/* Question du jour - cachée si carte déjà révélée */}
-          {!isRevealed && (
+          {!isRevealed && canPlayToday && (
             <View className="bg-white rounded-xl p-6 mb-6 shadow-sm">
               <Text className="text-lg font-bold text-center text-gray-800 mb-2">
                 Votre guidance du jour
@@ -638,6 +688,28 @@ export default function DailyCardScreen() {
                 Quelle énergie vous accompagnera aujourd'hui ? Choisissez une
                 carte et découvrez votre message.
               </Text>
+            </View>
+          )}
+
+          {/* Message pour carte déjà tirée */}
+          {!canPlayToday && !isRevealed && (
+            <View className="bg-orange-50 border border-orange-200 rounded-xl p-6 mb-6">
+              <Text className="text-lg font-bold text-center text-orange-800 mb-3">
+                Votre carte du jour a déjà été tirée
+              </Text>
+              <Text className="text-base text-orange-700 text-center mb-4">
+                Revenez demain pour une nouvelle guidance
+              </Text>
+              {selectedCardIndex !== null && session && (
+                <View className="bg-white rounded-xl p-4 border border-orange-300">
+                  <Text className="text-sm font-medium text-gray-700 text-center mb-2">
+                    Votre carte du jour :
+                  </Text>
+                  <Text className="text-xl font-bold text-center text-gray-800">
+                    {session.cards[selectedCardIndex].labelSnapshot}
+                  </Text>
+                </View>
+              )}
             </View>
           )}
 
@@ -684,23 +756,25 @@ export default function DailyCardScreen() {
             </View>
           )}
 
-          {/* Cartes */}
-          <View className="mb-6">
-            {session.cards.map((card, index) => (
-              <SelectableCard
-                key={card.id}
-                card={card}
-                index={index}
-                isSelected={selectedCardIndex === index}
-                onSelect={() => handleCardSelect(index)}
-                isRevealed={isRevealed}
-                isDisabled={
-                  (!canPlayToday && selectedCardIndex !== index) ||
-                  (isRevealed && selectedCardIndex !== index)
-                }
-              />
-            ))}
-          </View>
+          {/* Cartes - cachées si déjà joué mais pas révélé */}
+          {(canPlayToday || isRevealed) && (
+            <View className="mb-6">
+              {session.cards.map((card, index) => (
+                <SelectableCard
+                  key={card.id}
+                  card={card}
+                  index={index}
+                  isSelected={selectedCardIndex === index}
+                  onSelect={() => handleCardSelect(index)}
+                  isRevealed={isRevealed}
+                  isDisabled={
+                    (!canPlayToday && selectedCardIndex !== index) ||
+                    (isRevealed && selectedCardIndex !== index)
+                  }
+                />
+              ))}
+            </View>
+          )}
 
           {/* Boutons d'action */}
           <View className="pb-6">
