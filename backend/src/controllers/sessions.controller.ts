@@ -8,7 +8,6 @@ import { pickWeighted, startOfUTCDay } from "../utils/function.js";
 export async function createSession(req: Request, res: Response) {
   try {
     const ownerKey = String(req.header("x-owner-key") || "").trim();
-    const { title } = req.body;
 
     if (!ownerKey) {
       return res.status(400).json({
@@ -20,39 +19,18 @@ export async function createSession(req: Request, res: Response) {
       });
     }
 
-    // Pour les sessions daily, vérifier si l'utilisateur a déjà joué aujourd'hui
-    if (title && title.includes("quotidienne")) {
-      const todayUTC = startOfUTCDay();
-      const existingDaily = await prisma.dailyOutcome.findUnique({
-        where: { ownerKey_date: { ownerKey, date: todayUTC } },
-      });
-
-      if (existingDaily) {
-        return res.status(400).json({
-          success: false,
-          error: {
-            code: "ALREADY_PLAYED_TODAY",
-            message:
-              "Vous avez déjà tiré votre carte du jour. Revenez demain !",
-          },
-        });
-      }
-    }
-
     const seed = crypto.randomUUID();
 
     const session = await prisma.session.create({
       data: {
         ownerKey,
         seed,
-        // title: title || undefined,
       },
       select: {
         id: true,
         ownerKey: true,
         seed: true,
         startedAt: true,
-        // title: true,
       },
     });
 
@@ -133,17 +111,14 @@ export async function drawCard(req: Request, res: Response) {
       });
     }
 
-    // 50/50 tirage du type
     const randomValue = Math.random();
     const type = randomValue < 0.5 ? CardType.GOOD : CardType.BAD;
 
-    // candidats actifs du type
     const candidates = await prisma.cardTemplate.findMany({
       where: { isActive: true, type },
       select: { id: true, label: true, weight: true },
     });
 
-    // si pas de template en DB, fallback minimal pour ne pas bloquer
     let chosenTemplateId = null;
     let labelSnapshot =
       type === CardType.GOOD ? "Bonne carte" : "Mauvaise carte";
@@ -171,7 +146,6 @@ export async function drawCard(req: Request, res: Response) {
         labelSnapshot: true,
         cardTemplateId: true,
         createdAt: true,
-        // labelSnapshot: true, // Ajouté pour compatibilité avec le front-end
       },
     });
 
@@ -180,7 +154,7 @@ export async function drawCard(req: Request, res: Response) {
       data: {
         card: {
           ...newCard,
-          label: newCard.labelSnapshot, // Alias pour compatibilité
+          label: newCard.labelSnapshot,
         },
         remaining: 5 - (currentCount + 1),
       },
@@ -224,19 +198,16 @@ export async function finalPick(req: Request, res: Response) {
 
     // Vérifier si c'est une session daily et si l'utilisateur a déjà joué
     const todayUTC = startOfUTCDay();
-    const existingDaily = await prisma.dailyOutcome.findUnique({
-      where: { ownerKey_date: { ownerKey, date: todayUTC } },
-    });
 
-    if (existingDaily) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: "ALREADY_PLAYED_TODAY",
-          message: "Vous avez déjà tiré votre carte du jour. Revenez demain !",
-        },
-      });
-    }
+    // if (existingDaily) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     error: {
+    //       code: "ALREADY_PLAYED_TODAY",
+    //       message: "Vous avez déjà tiré votre carte du jour. Revenez demain !",
+    //     },
+    //   });
+    // }
 
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
@@ -305,7 +276,6 @@ export async function finalPick(req: Request, res: Response) {
     // Détermine si c'est une session daily
     const isDailySession = session.isOfficialDaily;
 
-    // Transaction pour finaliser la session et créer le daily outcome si nécessaire
     let updatedSession;
     let dailyOutcome = null;
 
@@ -396,7 +366,7 @@ export async function finalPick(req: Request, res: Response) {
   }
 }
 
-// Contrôleur de finalisation automatique (legacy - gardé pour compatibilité)
+// Contrôleur de finalisation avec vérification quotidienne
 export async function finalizeSessionWithDailyCheck(
   req: Request,
   res: Response
@@ -417,19 +387,19 @@ export async function finalizeSessionWithDailyCheck(
     const sessionId = String(req.params.id);
     const todayUTC = startOfUTCDay();
 
-    const existingDaily = await prisma.dailyOutcome.findUnique({
-      where: { ownerKey_date: { ownerKey, date: todayUTC } },
-    });
+    // const existingDaily = await prisma.dailyOutcome.findUnique({
+    //   where: { ownerKey_date: { ownerKey, date: todayUTC } },
+    // });
 
-    if (existingDaily) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: "ALREADY_PLAYED_TODAY",
-          message: "Vous avez déjà tiré votre carte du jour. Revenez demain !",
-        },
-      });
-    }
+    // if (existingDaily) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     error: {
+    //       code: "ALREADY_PLAYED_TODAY",
+    //       message: "Vous avez déjà tiré votre carte du jour. Revenez demain !",
+    //     },
+    //   });
+    // }
 
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
@@ -599,7 +569,7 @@ export async function getSession(req: Request, res: Response) {
         index: card.index,
         type: card.type.toLowerCase(),
         labelSnapshot: card.labelSnapshot,
-        label: card.labelSnapshot, // Alias pour compatibilité
+        label: card.labelSnapshot,
         cardTemplateId: card.cardTemplateId,
         createdAt: card.createdAt,
       })),
@@ -611,7 +581,7 @@ export async function getSession(req: Request, res: Response) {
             pickIndex: session.finalPickIndex,
           }
         : null,
-      cards: session.cards, // Format original aussi
+      cards: session.cards,
     };
 
     return res.status(200).json({
@@ -624,78 +594,6 @@ export async function getSession(req: Request, res: Response) {
       success: false,
       error: { code: "INTERNAL_ERROR", message: "Erreur interne du serveur." },
     });
-  }
-}
-
-// Fonctions utilitaires et autres endpoints (getDailyOutcome, etc.)
-export async function getDailyOutcome(req: Request, res: Response) {
-  try {
-    const ownerKey = String(req.header("x-owner-key") || "").trim();
-
-    if (!ownerKey) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: "OWNER_KEY_REQUIRED",
-          message: "L'en-tête x-owner-key est requis.",
-        },
-      });
-    }
-
-    const today = startOfUTCDay();
-
-    const outcome = await prisma.dailyOutcome.findUnique({
-      where: {
-        ownerKey_date: {
-          ownerKey,
-          date: today,
-        },
-      },
-      select: {
-        id: true,
-        ownerKey: true,
-        date: true,
-        sessionId: true,
-        finalCardId: true,
-        finalType: true,
-        finalLabel: true,
-        createdAt: true,
-      },
-    });
-
-    return res.status(200).json({
-      success: true,
-      data: {
-        dailyOutcome: outcome, // null si pas trouvé
-      },
-    });
-  } catch (error) {
-    console.error("[getDailyOutcome] Erreur:", error);
-    return res.status(500).json({
-      success: false,
-      error: {
-        code: "INTERNAL_ERROR",
-        message:
-          "Erreur interne du serveur lors de la récupération du résultat quotidien.",
-      },
-    });
-  }
-}
-
-export async function checkIfUserPlayedToday(ownerKey: string) {
-  try {
-    if (!ownerKey) return false;
-
-    const today = startOfUTCDay();
-    const outcome = await prisma.dailyOutcome.findUnique({
-      where: { ownerKey_date: { ownerKey, date: today } },
-      select: { id: true },
-    });
-
-    return outcome !== null;
-  } catch (error) {
-    console.error("[checkIfUserPlayedToday] Erreur:", error);
-    return false;
   }
 }
 
@@ -770,7 +668,6 @@ export async function getDailyStats(req: Request, res: Response) {
           totalDays: stats.totalDays,
           currentStreak: stats.currentStreak,
           lastPlayDate: stats.lastPlayDate,
-          hasPlayedToday: await checkIfUserPlayedToday(ownerKey),
         },
       },
     });

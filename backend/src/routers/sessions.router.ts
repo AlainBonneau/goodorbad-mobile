@@ -5,7 +5,6 @@ import {
   drawCard,
   finalizeSessionWithDailyCheck,
   getSession,
-  getDailyOutcome,
   getSessionHistory,
 } from "../controllers/sessions.controller.js";
 import { asyncHandler } from "../middlewares/error.js";
@@ -30,11 +29,6 @@ const actionsLimiter = rateLimit({
 });
 
 router.get("/:id", getSession);
-router.get(
-  "/daily-outcome",
-  validate({ headers: ownerKeyHeaderSchema }),
-  asyncHandler(getDailyOutcome)
-);
 router.get(
   "/history/list",
   validate({
