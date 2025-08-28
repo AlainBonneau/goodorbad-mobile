@@ -29,6 +29,7 @@ export default function useGoodBadGame() {
     [attempts, draws]
   );
 
+  // Fonction pour démarrer une session si nécessaire
   const startSessionIfNeeded = useCallback(async () => {
     if (sessionId) return sessionId;
     const res = await api.createSession(name.trim() || "Invité");
@@ -36,6 +37,7 @@ export default function useGoodBadGame() {
     return res.id;
   }, [name, sessionId]);
 
+  // Fonction pour piocher une carte
   const draw = useCallback(async () => {
     if (!canDraw) return;
     try {
@@ -50,8 +52,10 @@ export default function useGoodBadGame() {
     }
   }, [canDraw, startSessionIfNeeded]);
 
+  // Fonction pour révéler les choix finaux
   const revealFinalChoices = useCallback(() => setShowFinalCards(true), []);
 
+  // Fonction pour choisir la carte finale
   const pickFinal = useCallback(
     async (index: number) => {
       if (pickedIndex !== null || !sessionId) return;
@@ -70,6 +74,7 @@ export default function useGoodBadGame() {
     [pickedIndex, sessionId]
   );
 
+  // Fonction pour réinitialiser le jeu
   const reset = useCallback(() => {
     setSessionId(null);
     setDraws([]);
@@ -81,6 +86,7 @@ export default function useGoodBadGame() {
     flipKeyRef.current += 1;
   }, []);
 
+  // Fonction pour obtenir le type de la carte finale
   const getFinalType = useCallback(
     (card?: Card | null): CardType | undefined => card?.type,
     []
