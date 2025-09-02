@@ -1,9 +1,7 @@
 import { prisma } from "../lib/prisma.js";
-import { CardType } from "@prisma/client";
-import { pickWeighted, startOfUTCDay } from "../utils/function.js";
-import crypto from "crypto";
 
 export class DailyService {
+  // Récupération des statistiques de l'utilisateur
   async getUserStats(ownerKey: string) {
     if (!ownerKey) {
       return { totalDays: 0, currentStreak: 0, lastPlayDate: null };
@@ -28,6 +26,7 @@ export class DailyService {
     };
   }
 
+  // Calcul de la série actuelle
   private async calculateStreak(ownerKey: string, lastOutcome: any) {
     if (!lastOutcome) return 0;
 

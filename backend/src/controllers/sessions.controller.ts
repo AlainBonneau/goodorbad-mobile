@@ -10,6 +10,7 @@ const cardService = new CardService();
 const dailyService = new DailyService();
 const finalizationService = new FinalizationService(dailyService);
 
+// Controlleur pour la création de session
 export async function createSession(req: Request, res: Response) {
   try {
     const ownerKey = String(req.header("x-owner-key") || "").trim();
@@ -22,6 +23,7 @@ export async function createSession(req: Request, res: Response) {
   }
 }
 
+// Contrôleur pour le tirage de carte
 export async function drawCard(req: Request, res: Response) {
   try {
     const ownerKey = String(req.header("x-owner-key") || "").trim();
@@ -36,6 +38,7 @@ export async function drawCard(req: Request, res: Response) {
   }
 }
 
+// Contrôleur pour la sélection finale
 export async function finalPick(req: Request, res: Response) {
   try {
     const ownerKey = String(req.header("x-owner-key") || "").trim();
@@ -75,6 +78,7 @@ export async function finalizeSessionWithDailyCheck(
   }
 }
 
+// Contrôleur pour la récupération d'une session
 export async function getSession(req: Request, res: Response) {
   try {
     const ownerKey = String(req.header("x-owner-key") || "").trim();
@@ -89,6 +93,7 @@ export async function getSession(req: Request, res: Response) {
   }
 }
 
+// Contrôleur pour la récupération des statistiques quotidiennes
 export async function getDailyStats(req: Request, res: Response) {
   try {
     const ownerKey = String(req.header("x-owner-key") || "").trim();
@@ -101,6 +106,7 @@ export async function getDailyStats(req: Request, res: Response) {
   }
 }
 
+// Contrôleur pour l'affichage de l'historique des sessions
 export async function getSessionHistory(req: Request, res: Response) {
   try {
     const ownerKey = String(req.header("x-owner-key") || "").trim();

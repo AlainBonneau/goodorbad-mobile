@@ -1,9 +1,9 @@
 import { prisma } from "../lib/prisma.js";
 import { CardType } from "@prisma/client";
-import { pickWeighted, startOfUTCDay } from "../utils/function.js";
-import crypto from "crypto";
+import { pickWeighted } from "../utils/function.js";
 
 export class CardService {
+  // Tirage d'une carte
   async drawCard(sessionId: string, ownerKey: string) {
     const session = await this.validateDrawSession(sessionId, ownerKey);
 
@@ -43,6 +43,7 @@ export class CardService {
     };
   }
 
+  // Validation de la session de tirage
   private async validateDrawSession(sessionId: string, ownerKey: string) {
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
@@ -61,6 +62,7 @@ export class CardService {
     return session;
   }
 
+  // Sélection d'une carte
   private async selectCard() {
     const randomValue = Math.random();
     const type = randomValue < 0.5 ? CardType.GOOD : CardType.BAD;

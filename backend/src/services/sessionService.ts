@@ -1,9 +1,8 @@
 import { prisma } from "../lib/prisma.js";
-import { CardType } from "@prisma/client";
-import { pickWeighted, startOfUTCDay } from "../utils/function.js";
 import crypto from "crypto";
 
 export class SessionService {
+  // Création d'une session
   async createSession(ownerKey: string) {
     const seed = crypto.randomUUID();
 
@@ -18,6 +17,7 @@ export class SessionService {
     });
   }
 
+  // Récupération d'une session
   async getSession(sessionId: string, ownerKey: string) {
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
@@ -42,6 +42,7 @@ export class SessionService {
     return this.formatSession(session);
   }
 
+  // Récupération de l'historique des sessions
   async getSessionHistory(
     ownerKey: string,
     page: number = 1,
@@ -87,6 +88,7 @@ export class SessionService {
     };
   }
 
+  // Récupération d'une session
   private formatSession(session: any) {
     return {
       id: session.id,

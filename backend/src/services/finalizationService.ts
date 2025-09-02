@@ -1,12 +1,11 @@
 import { prisma } from "../lib/prisma.js";
-import { CardType } from "@prisma/client";
-import { pickWeighted, startOfUTCDay } from "../utils/function.js";
-import crypto from "crypto";
+import { startOfUTCDay } from "../utils/function.js";
 import { DailyService } from "./dailyService.js";
 
 export class FinalizationService {
   constructor(private dailyService: DailyService) {}
 
+  // Finalisation d'une session avec un choix de carte
   async finalizeWithPick(
     sessionId: string,
     ownerKey: string,
@@ -20,6 +19,7 @@ export class FinalizationService {
     return this.executeFinalization(session, chosenCard, ownerKey);
   }
 
+  // Finalisation d'une session avec vérification quotidienne
   async finalizeWithDailyCheck(sessionId: string, ownerKey: string) {
     const session = await this.getSessionForFinalization(sessionId, ownerKey);
     const pickIndex = Math.floor(Math.random() * 5);
@@ -45,12 +45,14 @@ export class FinalizationService {
     };
   }
 
+  // Validation de l'index de choix
   private validatePickIndex(pickIndex: number) {
     if (typeof pickIndex !== "number" || pickIndex < 0 || pickIndex > 4) {
       throw new Error("INVALID_PICK_INDEX");
     }
   }
 
+  // Récupération de la session pour finalisation
   private async getSessionForFinalization(sessionId: string, ownerKey: string) {
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
@@ -76,12 +78,14 @@ export class FinalizationService {
     return session;
   }
 
+  // Récupération de la carte choisie
   private getChosenCard(cards: any[], pickIndex: number) {
     const chosenCard = cards.find((card) => card.index === pickIndex);
     if (!chosenCard) throw new Error("INVALID_CARD_INDEX");
     return chosenCard;
   }
 
+  // Exécution de la finalisation
   private async executeFinalization(
     session: any,
     chosenCard: any,
@@ -127,6 +131,7 @@ export class FinalizationService {
     }
   }
 
+  // Mise à jour de la session
   private updateSession(
     sessionId: string,
     chosenCard: any,
@@ -157,6 +162,7 @@ export class FinalizationService {
     });
   }
 
+  // Création d'un résultat quotidien
   private createDailyOutcome(
     ownerKey: string,
     chosenCard: any,
