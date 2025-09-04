@@ -32,24 +32,13 @@ async function http<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   const fullUrl = `${BASE_URL}${path}`;
 
-  console.log("🔍 API Request Debug:");
-  console.log("- URL:", fullUrl);
-  console.log("- Method:", options.method || "GET");
-  console.log("- Headers:", headers);
-  console.log("- Body:", options.body);
-  console.log("- BASE_URL from env:", process.env.EXPO_PUBLIC_API_BASE_URL);
-
   try {
     const res = await fetch(fullUrl, {
       headers,
       ...options,
     });
 
-    console.log("🔍 Response status:", res.status);
-    console.log("🔍 Response ok:", res.ok);
-
     const text = await res.text();
-    console.log("🔍 Response text:", text);
 
     const data = text ? JSON.parse(text) : null;
 
@@ -59,14 +48,11 @@ async function http<T>(path: string, options: RequestInit = {}): Promise<T> {
         data?.error ||
         res.statusText ||
         "Request failed";
-      console.log("❌ Request failed:", message);
       throw new Error(`${res.status} ${message}`);
     }
 
-    console.log("✅ Request successful:", data);
     return data;
   } catch (error) {
-    console.log("❌ Network error:", error);
     throw error;
   }
 }
@@ -106,8 +92,6 @@ export const api = {
       }
     );
 
-    console.log("🔍 Raw backend card response:", response.data.card);
-
     const backendCard = response.data.card;
     const adaptedCard = {
       id: backendCard.id,
@@ -115,8 +99,6 @@ export const api = {
       label:
         backendCard.labelSnapshot || backendCard.label || "Carte sans texte",
     };
-
-    console.log("🔍 Adapted card for frontend:", adaptedCard);
 
     return {
       card: adaptedCard,
@@ -187,25 +169,18 @@ export const api = {
 
       return response.data;
     } catch (error) {
-      console.log("Pas de daily outcome trouvé:", error);
       return null;
     }
   },
 
   // Méthode pour récupérer les statistiques
   async getStatistics() {
-    console.log("📊 [STATS] Starting getStatistics...");
-
     try {
       const response = await http<{
         success: boolean;
         data: any;
       }>(`/api/v1/stats/statistics`);
 
-      console.log(
-        "📊 [STATS] Response received:",
-        JSON.stringify(response, null, 2)
-      );
       return response.data;
     } catch (error) {
       console.error("❌ [STATS] Error in getStatistics:", error);

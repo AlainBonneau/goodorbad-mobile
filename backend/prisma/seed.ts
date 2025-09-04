@@ -21,8 +21,6 @@ async function main() {
       ...c,
     })),
   });
-
-  console.log("✅ 200 cartes insérées (100 GOOD / 100 BAD) !");
 }
 
 main()

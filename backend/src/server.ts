@@ -57,7 +57,6 @@ app.get("/", (_req, res) => {
 app.use("/api/v1/sessions", sessionsRouter);
 app.use("/api/v1/stats", statsRouter);
 
-app.listen(3000, "0.0.0.0", () => {
-  console.log("Server running on http://0.0.0.0:3000");
-  console.log("Also available on http://192.168.1.55:3000");
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
