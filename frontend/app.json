@@ -5,20 +5,31 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.sparcky54.goodorbadmobile"
     },
     "web": {
       "bundler": "metro",
       "userInterfaceStyle": "light"
     },
-    "plugins": ["expo-router"],
-    "scheme": "good-or-bad-mobile"
+    "plugins": [
+      "expo-router"
+    ],
+    "scheme": "good-or-bad-mobile",
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "21792621-495e-44c2-85eb-4bf42c4fc88e"
+      }
+    }
   }
 }
