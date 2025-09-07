@@ -1,1805 +1,305 @@
 {
   "good": [
     {
-      "label": "Tes efforts porte déjà ses fruits — tu vas surprendre même les sceptiques.",
+      "label": "Une opportunité inattendue va se présenter cette semaine — saisis-la sans hésiter.",
       "intensity": 1,
-      "tags": [
-        "motivation",
-        "travail"
-      ],
+      "tags": ["opportunité", "travail"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts attire des opportunités — tu vas le sentir aujourd’hui.",
+      "label": "Ton intuition est particulièrement aiguisée aujourd'hui — fais-lui confiance.",
       "intensity": 2,
-      "tags": [
-        "persévérance",
-        "réussite"
-      ],
+      "tags": ["intuition", "décision"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts sera récompensé — continue sur cette lancée.",
+      "label": "Une collaboration fructueuse va naître d'une rencontre fortuite.",
       "intensity": 3,
-      "tags": [
-        "chance",
-        "karma"
-      ],
+      "tags": ["collaboration", "relationnel"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts va payer plus vite que tu ne le crois — crois en toi.",
+      "label": "Tes compétences vont être reconnues par quelqu'un d'influent — prépare-toi à briller.",
       "intensity": 4,
-      "tags": [
-        "confiance",
-        "énergie"
-      ],
+      "tags": ["reconnaissance", "carrière"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts sera récompensé — fais-toi confiance.",
+      "label": "Un projet que tu as semé va enfin porter ses fruits de manière spectaculaire.",
       "intensity": 5,
-      "tags": [
-        "opportunité",
-        "avenir"
-      ],
+      "tags": ["réussite", "récompense"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts fera la différence — crois en toi.",
+      "label": "Ta créativité va débloquer une solution élégante à un problème complexe.",
       "intensity": 1,
-      "tags": [
-        "calme",
-        "clarté"
-      ],
+      "tags": ["créativité", "solution"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts paieront bientôt — tu vas surprendre même les sceptiques.",
+      "label": "Une conversation anodine va t'ouvrir une porte insoupçonnée.",
       "intensity": 2,
-      "tags": [
-        "organisation",
-        "productivité"
-      ],
+      "tags": ["communication", "opportunité"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts paieront bientôt — le meilleur arrive.",
+      "label": "Ton réseau professionnel va jouer en ta faveur de façon inattendue.",
       "intensity": 3,
-      "tags": [
-        "créativité",
-        "idée"
-      ],
+      "tags": ["réseau", "soutien"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts te distingue nettement — tu vas le sentir aujourd’hui.",
+      "label": "Une compétence que tu sous-estimes va devenir ton atout majeur.",
       "intensity": 4,
-      "tags": [
-        "apprentissage",
-        "progression"
-      ],
+      "tags": ["compétence", "confiance"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts te distingue nettement — reste focus.",
+      "label": "Le timing parfait va s'aligner pour concrétiser tes ambitions les plus audacieuses.",
       "intensity": 5,
-      "tags": [
-        "relationnel",
-        "soutien"
-      ],
+      "tags": ["timing", "ambition"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts te rapproche de ton objectif — ne lâche rien.",
+      "label": "Ta persévérance va inspirer quelqu'un qui t'aidera en retour.",
       "intensity": 1,
-      "tags": [
-        "motivation",
-        "travail"
-      ],
+      "tags": ["persévérance", "inspiration"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts impressionnera les bonnes personnes — profite de l’élan.",
+      "label": "Un détail que tu remarques va te donner un avantage concurrentiel.",
       "intensity": 2,
-      "tags": [
-        "persévérance",
-        "réussite"
-      ],
+      "tags": ["observation", "avantage"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts te distingue nettement — garde le cap.",
+      "label": "Tes efforts passés vont créer un effet domino positif aujourd'hui.",
       "intensity": 3,
-      "tags": [
-        "chance",
-        "karma"
-      ],
+      "tags": ["effet domino", "récompense"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts te rapproche de ton objectif — tu vas le sentir aujourd’hui.",
+      "label": "Une décision courageuse va transformer radicalement ta trajectoire.",
       "intensity": 4,
-      "tags": [
-        "confiance",
-        "énergie"
-      ],
+      "tags": ["courage", "transformation"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts impressionnera les bonnes personnes — reste focus.",
+      "label": "L'univers conspire pour que tes rêves les plus fous deviennent réalité.",
       "intensity": 5,
-      "tags": [
-        "opportunité",
-        "avenir"
-      ],
+      "tags": ["rêves", "manifestation"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts te rend inarrêtable aujourd’hui — continue sur cette lancée.",
+      "label": "Ta capacité d'adaptation va te permettre de surfer sur le changement.",
       "intensity": 1,
-      "tags": [
-        "calme",
-        "clarté"
-      ],
+      "tags": ["adaptation", "changement"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts va payer plus vite que tu ne le crois — garde le cap.",
+      "label": "Un mentor inattendu va croiser ton chemin au bon moment.",
       "intensity": 2,
-      "tags": [
-        "organisation",
-        "productivité"
-      ],
+      "tags": ["mentor", "guidance"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts porte déjà ses fruits — tu vas le sentir aujourd’hui.",
+      "label": "Ta passion va contagieusement motiver toute ton équipe.",
       "intensity": 3,
-      "tags": [
-        "créativité",
-        "idée"
-      ],
+      "tags": ["passion", "leadership"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts attire des opportunités — ne lâche rien.",
+      "label": "Une innovation que tu portes va révolutionner ton secteur d'activité.",
       "intensity": 4,
-      "tags": [
-        "apprentissage",
-        "progression"
-      ],
+      "tags": ["innovation", "révolution"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tes efforts te rapproche de ton objectif — fais-toi confiance.",
+      "label": "Tes valeurs authentiques vont attirer exactement les bonnes personnes vers toi.",
       "intensity": 5,
-      "tags": [
-        "relationnel",
-        "soutien"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts porte déjà ses fruits — garde le cap.",
-      "intensity": 1,
-      "tags": [
-        "motivation",
-        "travail"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts porte déjà ses fruits — reste focus.",
-      "intensity": 2,
-      "tags": [
-        "persévérance",
-        "réussite"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te rapproche de ton objectif — profite de l’élan.",
-      "intensity": 3,
-      "tags": [
-        "chance",
-        "karma"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts fera la différence — le meilleur arrive.",
-      "intensity": 4,
-      "tags": [
-        "confiance",
-        "énergie"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts porte déjà ses fruits — crois en toi.",
-      "intensity": 5,
-      "tags": [
-        "opportunité",
-        "avenir"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts sera récompensé — garde le cap.",
-      "intensity": 1,
-      "tags": [
-        "calme",
-        "clarté"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts va payer plus vite que tu ne le crois — fais-toi confiance.",
-      "intensity": 2,
-      "tags": [
-        "organisation",
-        "productivité"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts t’ouvrira des portes — garde le cap.",
-      "intensity": 3,
-      "tags": [
-        "créativité",
-        "idée"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te distingue nettement — tu vas surprendre même les sceptiques.",
-      "intensity": 4,
-      "tags": [
-        "apprentissage",
-        "progression"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te fait passer un cap — tu vas le sentir aujourd’hui.",
-      "intensity": 5,
-      "tags": [
-        "relationnel",
-        "soutien"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts attire des opportunités — reste focus.",
-      "intensity": 1,
-      "tags": [
-        "motivation",
-        "travail"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts fera la différence — tu vas le prouver.",
-      "intensity": 2,
-      "tags": [
-        "persévérance",
-        "réussite"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te rend inarrêtable aujourd’hui — reste focus.",
-      "intensity": 3,
-      "tags": [
-        "chance",
-        "karma"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts sera récompensé — le meilleur arrive.",
-      "intensity": 4,
-      "tags": [
-        "confiance",
-        "énergie"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts fera la différence — profite de l’élan.",
-      "intensity": 5,
-      "tags": [
-        "opportunité",
-        "avenir"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts attire des opportunités — crois en toi.",
-      "intensity": 1,
-      "tags": [
-        "calme",
-        "clarté"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts sera récompensé — profite de l’élan.",
-      "intensity": 2,
-      "tags": [
-        "organisation",
-        "productivité"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te rapproche de ton objectif — crois en toi.",
-      "intensity": 3,
-      "tags": [
-        "créativité",
-        "idée"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts fera la différence — tu vas surprendre même les sceptiques.",
-      "intensity": 4,
-      "tags": [
-        "apprentissage",
-        "progression"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts va payer plus vite que tu ne le crois — tu vas surprendre même les sceptiques.",
-      "intensity": 5,
-      "tags": [
-        "relationnel",
-        "soutien"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts attire des opportunités — garde le cap.",
-      "intensity": 1,
-      "tags": [
-        "motivation",
-        "travail"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te distingue nettement — crois en toi.",
-      "intensity": 2,
-      "tags": [
-        "persévérance",
-        "réussite"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te distingue nettement — ça va se voir.",
-      "intensity": 3,
-      "tags": [
-        "chance",
-        "karma"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te rapproche de ton objectif — ça va se voir.",
-      "intensity": 4,
-      "tags": [
-        "confiance",
-        "énergie"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te rapproche de ton objectif — reste focus.",
-      "intensity": 5,
-      "tags": [
-        "opportunité",
-        "avenir"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts paieront bientôt — tu vas le sentir aujourd’hui.",
-      "intensity": 1,
-      "tags": [
-        "calme",
-        "clarté"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts t’ouvrira des portes — ça va se voir.",
-      "intensity": 2,
-      "tags": [
-        "organisation",
-        "productivité"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts impressionnera les bonnes personnes — le meilleur arrive.",
-      "intensity": 3,
-      "tags": [
-        "créativité",
-        "idée"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts fera la différence — continue sur cette lancée.",
-      "intensity": 4,
-      "tags": [
-        "apprentissage",
-        "progression"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts sera récompensé — tu vas le prouver.",
-      "intensity": 5,
-      "tags": [
-        "relationnel",
-        "soutien"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts paieront bientôt — tu vas le prouver.",
-      "intensity": 1,
-      "tags": [
-        "motivation",
-        "travail"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts va payer plus vite que tu ne le crois — ne lâche rien.",
-      "intensity": 2,
-      "tags": [
-        "persévérance",
-        "réussite"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts attire des opportunités — fais-toi confiance.",
-      "intensity": 3,
-      "tags": [
-        "chance",
-        "karma"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts va payer plus vite que tu ne le crois — tu vas le prouver.",
-      "intensity": 4,
-      "tags": [
-        "confiance",
-        "énergie"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te distingue nettement — profite de l’élan.",
-      "intensity": 5,
-      "tags": [
-        "opportunité",
-        "avenir"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts t’ouvrira des portes — tu vas le prouver.",
-      "intensity": 1,
-      "tags": [
-        "calme",
-        "clarté"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts impressionnera les bonnes personnes — continue sur cette lancée.",
-      "intensity": 2,
-      "tags": [
-        "organisation",
-        "productivité"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts paieront bientôt — reste focus.",
-      "intensity": 3,
-      "tags": [
-        "créativité",
-        "idée"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts impressionnera les bonnes personnes — garde le cap.",
-      "intensity": 4,
-      "tags": [
-        "apprentissage",
-        "progression"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts t’ouvrira des portes — continue sur cette lancée.",
-      "intensity": 5,
-      "tags": [
-        "relationnel",
-        "soutien"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts paieront bientôt — profite de l’élan.",
-      "intensity": 1,
-      "tags": [
-        "motivation",
-        "travail"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te distingue nettement — tu vas le prouver.",
-      "intensity": 2,
-      "tags": [
-        "persévérance",
-        "réussite"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts t’ouvrira des portes — ne lâche rien.",
-      "intensity": 3,
-      "tags": [
-        "chance",
-        "karma"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts paieront bientôt — continue sur cette lancée.",
-      "intensity": 4,
-      "tags": [
-        "confiance",
-        "énergie"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te fait passer un cap — tu vas surprendre même les sceptiques.",
-      "intensity": 5,
-      "tags": [
-        "opportunité",
-        "avenir"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts va payer plus vite que tu ne le crois — le meilleur arrive.",
-      "intensity": 1,
-      "tags": [
-        "calme",
-        "clarté"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te fait passer un cap — ne lâche rien.",
-      "intensity": 2,
-      "tags": [
-        "organisation",
-        "productivité"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts attire des opportunités — le meilleur arrive.",
-      "intensity": 3,
-      "tags": [
-        "créativité",
-        "idée"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts sera récompensé — tu vas le sentir aujourd’hui.",
-      "intensity": 4,
-      "tags": [
-        "apprentissage",
-        "progression"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te rapproche de ton objectif — continue sur cette lancée.",
-      "intensity": 5,
-      "tags": [
-        "relationnel",
-        "soutien"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te rapproche de ton objectif — garde le cap.",
-      "intensity": 1,
-      "tags": [
-        "motivation",
-        "travail"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts porte déjà ses fruits — le meilleur arrive.",
-      "intensity": 2,
-      "tags": [
-        "persévérance",
-        "réussite"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te fait passer un cap — crois en toi.",
-      "intensity": 3,
-      "tags": [
-        "chance",
-        "karma"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts impressionnera les bonnes personnes — ne lâche rien.",
-      "intensity": 4,
-      "tags": [
-        "confiance",
-        "énergie"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts fera la différence — tu vas le sentir aujourd’hui.",
-      "intensity": 5,
-      "tags": [
-        "opportunité",
-        "avenir"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te distingue nettement — le meilleur arrive.",
-      "intensity": 1,
-      "tags": [
-        "calme",
-        "clarté"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts porte déjà ses fruits — tu vas le prouver.",
-      "intensity": 2,
-      "tags": [
-        "organisation",
-        "productivité"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts sera récompensé — crois en toi.",
-      "intensity": 3,
-      "tags": [
-        "créativité",
-        "idée"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te fait passer un cap — profite de l’élan.",
-      "intensity": 4,
-      "tags": [
-        "apprentissage",
-        "progression"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te fait passer un cap — reste focus.",
-      "intensity": 5,
-      "tags": [
-        "relationnel",
-        "soutien"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts fera la différence — ne lâche rien.",
-      "intensity": 1,
-      "tags": [
-        "motivation",
-        "travail"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te fait passer un cap — garde le cap.",
-      "intensity": 2,
-      "tags": [
-        "persévérance",
-        "réussite"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te rapproche de ton objectif — tu vas surprendre même les sceptiques.",
-      "intensity": 3,
-      "tags": [
-        "chance",
-        "karma"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te rend inarrêtable aujourd’hui — tu vas le prouver.",
-      "intensity": 4,
-      "tags": [
-        "confiance",
-        "énergie"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts attire des opportunités — tu vas surprendre même les sceptiques.",
-      "intensity": 5,
-      "tags": [
-        "opportunité",
-        "avenir"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te fait passer un cap — fais-toi confiance.",
-      "intensity": 1,
-      "tags": [
-        "calme",
-        "clarté"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts attire des opportunités — ça va se voir.",
-      "intensity": 2,
-      "tags": [
-        "organisation",
-        "productivité"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te rend inarrêtable aujourd’hui — fais-toi confiance.",
-      "intensity": 3,
-      "tags": [
-        "créativité",
-        "idée"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts attire des opportunités — continue sur cette lancée.",
-      "intensity": 4,
-      "tags": [
-        "apprentissage",
-        "progression"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te rend inarrêtable aujourd’hui — garde le cap.",
-      "intensity": 5,
-      "tags": [
-        "relationnel",
-        "soutien"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts t’ouvrira des portes — crois en toi.",
-      "intensity": 1,
-      "tags": [
-        "motivation",
-        "travail"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts fera la différence — garde le cap.",
-      "intensity": 2,
-      "tags": [
-        "persévérance",
-        "réussite"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts sera récompensé — tu vas surprendre même les sceptiques.",
-      "intensity": 3,
-      "tags": [
-        "chance",
-        "karma"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te fait passer un cap — continue sur cette lancée.",
-      "intensity": 4,
-      "tags": [
-        "confiance",
-        "énergie"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts t’ouvrira des portes — fais-toi confiance.",
-      "intensity": 5,
-      "tags": [
-        "opportunité",
-        "avenir"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts sera récompensé — ça va se voir.",
-      "intensity": 1,
-      "tags": [
-        "calme",
-        "clarté"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te rapproche de ton objectif — tu vas le prouver.",
-      "intensity": 2,
-      "tags": [
-        "organisation",
-        "productivité"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te rend inarrêtable aujourd’hui — ne lâche rien.",
-      "intensity": 3,
-      "tags": [
-        "créativité",
-        "idée"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts te fait passer un cap — tu vas le prouver.",
-      "intensity": 4,
-      "tags": [
-        "apprentissage",
-        "progression"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tes efforts sera récompensé — ne lâche rien.",
-      "intensity": 5,
-      "tags": [
-        "relationnel",
-        "soutien"
-      ],
+      "tags": ["authenticité", "attraction"],
       "locale": "fr-FR"
     }
   ],
   "bad": [
     {
-      "label": "Tu vas croiser une dépendance humaine critique. Conclusion : il faudra rattraper derrière.",
+      "label": "Attention : une promesse non tenue va créer des tensions — anticipe et communique.",
       "intensity": 1,
-      "tags": [
-        "retard",
-        "imprévu"
-      ],
+      "tags": ["promesse", "communication"],
       "locale": "fr-FR"
     },
     {
-      "label": "Méfie-toi : une critique peu constructive, et petit stress inutile.",
+      "label": "Un malentendu par email va compliquer une négociation importante.",
       "intensity": 2,
-      "tags": [
-        "bug",
-        "panne"
-      ],
+      "tags": ["malentendu", "négociation"],
       "locale": "fr-FR"
     },
     {
-      "label": "Attention aux détails : un conflit passif-agressif. Solution : prévenir à l’avance.",
+      "label": "Ta procrastination sur un dossier crucial va te rattraper brutalement.",
       "intensity": 3,
-      "tags": [
-        "budget",
-        "dépense"
-      ],
+      "tags": ["procrastination", "urgence"],
       "locale": "fr-FR"
     },
     {
-      "label": "Quand tu t’y prendras, rappelle-toi que un formulaire qui refuse d’envoyer. Sinon, tu rates un créneau précieux.",
+      "label": "Une décision prise sous le stress va coûter cher — très cher.",
       "intensity": 4,
-      "tags": [
-        "communication",
-        "malentendu"
-      ],
+      "tags": ["stress", "décision"],
       "locale": "fr-FR"
     },
     {
-      "label": "Méfie-toi : un fournisseur silencieux, et ça dégrade la qualité.",
+      "label": "Ta confiance excessive va te mener droit dans le mur — humilité requise.",
       "intensity": 5,
-      "tags": [
-        "stress",
-        "pression"
-      ],
+      "tags": ["orgueil", "chute"],
       "locale": "fr-FR"
     },
     {
-      "label": "Quand tu t’y prendras, rappelle-toi que une info manquante. Sinon, tu t’énerves pour peu.",
+      "label": "Un collègue jaloux va saboter discrètement ton travail.",
       "intensity": 1,
-      "tags": [
-        "organisation",
-        "priorités"
-      ],
+      "tags": ["jalousie", "sabotage"],
       "locale": "fr-FR"
     },
     {
-      "label": "Quand tu t’y prendras, rappelle-toi que une spec ambiguë. Sinon, ça bloque la suite.",
+      "label": "Tes données importantes vont disparaître au pire moment possible.",
       "intensity": 2,
-      "tags": [
-        "conflit",
-        "ego"
-      ],
+      "tags": ["données", "perte"],
       "locale": "fr-FR"
     },
     {
-      "label": "Le timing pique un peu : une estimation trop optimiste. Et derrière, il faudra rattraper derrière.",
+      "label": "Un client mécontent va ternir ta réputation publiquement.",
       "intensity": 3,
-      "tags": [
-        "qualité",
-        "erreur"
-      ],
+      "tags": ["réputation", "client"],
       "locale": "fr-FR"
     },
     {
-      "label": "Le timing pique un peu : un rollback douloureux. Et derrière, tu dois t’excuser.",
+      "label": "Ton perfectionnisme va paralyser un projet stratégique majeur.",
       "intensity": 4,
-      "tags": [
-        "workflow",
-        "blocage"
-      ],
+      "tags": ["perfectionnisme", "paralysie"],
       "locale": "fr-FR"
     },
     {
-      "label": "Aujourd’hui, une métrique trompeuse : tu dois t’excuser.",
+      "label": "Une trahison de ton cercle proche va ébranler tes fondements — méfie-toi.",
       "intensity": 5,
-      "tags": [
-        "risque",
-        "prudence"
-      ],
+      "tags": ["trahison", "confiance"],
       "locale": "fr-FR"
     },
     {
-      "label": "Si tu vas trop vite, une alerte ignorée. Mieux vaut poser une question simple.",
+      "label": "Un oubli administratif va créer des complications bureaucratiques sans fin.",
       "intensity": 1,
-      "tags": [
-        "retard",
-        "imprévu"
-      ],
+      "tags": ["bureaucratie", "oubli"],
       "locale": "fr-FR"
     },
     {
-      "label": "Attention aux détails : une promesse non tenue. Solution : couper les distractions.",
+      "label": "Ta négligence sur les détails va faire capoter un accord lucratif.",
       "intensity": 2,
-      "tags": [
-        "bug",
-        "panne"
-      ],
+      "tags": ["négligence", "détails"],
       "locale": "fr-FR"
     },
     {
-      "label": "Pas le jour pour improviser : un rollback douloureux. Résultat : tu dois t’excuser.",
+      "label": "Un concurrent sans scrupules va voler ton idée et la commercialiser avant toi.",
       "intensity": 3,
-      "tags": [
-        "budget",
-        "dépense"
-      ],
+      "tags": ["concurrence", "vol"],
       "locale": "fr-FR"
     },
     {
-      "label": "Aujourd’hui, un agenda mal synchronisé. Le meilleur move : prévoir un tampon de temps.",
+      "label": "Ton manque de préparation va t'humilier devant un auditoire important.",
       "intensity": 4,
-      "tags": [
-        "communication",
-        "malentendu"
-      ],
+      "tags": ["préparation", "humiliation"],
       "locale": "fr-FR"
     },
     {
-      "label": "Pas le jour pour improviser : une relance oubliée. Résultat : tu t’énerves pour peu.",
+      "label": "Une dépendance que tu ignores va faire s'effondrer ton château de cartes.",
       "intensity": 5,
-      "tags": [
-        "stress",
-        "pression"
-      ],
+      "tags": ["dépendance", "effondrement"],
       "locale": "fr-FR"
     },
     {
-      "label": "Aujourd’hui, un dossier mal nommé : perte de temps.",
+      "label": "Un système critique va planter pendant ta démonstration la plus importante.",
       "intensity": 1,
-      "tags": [
-        "organisation",
-        "priorités"
-      ],
+      "tags": ["panne", "démonstration"],
       "locale": "fr-FR"
     },
     {
-      "label": "Pas le jour pour improviser : une licence expirée. Résultat : tu t’énerves pour peu.",
+      "label": "Tes économies vont fondre à cause d'une dépense imprévue massive.",
       "intensity": 2,
-      "tags": [
-        "conflit",
-        "ego"
-      ],
+      "tags": ["argent", "imprévu"],
       "locale": "fr-FR"
     },
     {
-      "label": "Le timing pique un peu : un retour client tardif. Et derrière, malentendu garanti.",
+      "label": "Un mensonge 'innocent' va créer un effet boule de neige destructeur.",
       "intensity": 3,
-      "tags": [
-        "qualité",
-        "erreur"
-      ],
+      "tags": ["mensonge", "conséquences"],
       "locale": "fr-FR"
     },
     {
-      "label": "Pas le jour pour improviser : une incohérence de chiffres. Résultat : ça dégrade la qualité.",
+      "label": "Ta zone de confort va devenir une prison dorée qui t'étouffera lentement.",
       "intensity": 4,
-      "tags": [
-        "workflow",
-        "blocage"
-      ],
+      "tags": ["confort", "stagnation"],
       "locale": "fr-FR"
     },
     {
-      "label": "Le timing pique un peu : un retour client tardif. Et derrière, tu dépenses plus que prévu.",
+      "label": "L'opportunité de ta vie va passer sous ton nez pendant que tu hésites.",
       "intensity": 5,
-      "tags": [
-        "risque",
-        "prudence"
-      ],
+      "tags": ["hésitation", "opportunité manquée"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tu vas croiser un appareil qui lâche. Conclusion : tu dois recommencer.",
+      "label": "Un changement d'algorithme va anéantir ton trafic du jour au lendemain.",
       "intensity": 1,
-      "tags": [
-        "retard",
-        "imprévu"
-      ],
+      "tags": ["algorithme", "trafic"],
       "locale": "fr-FR"
     },
     {
-      "label": "Aujourd’hui, une coupure internet : on te reproche un détail.",
+      "label": "Ton refus d'écouter les critiques va t'isoler de ton équipe.",
       "intensity": 2,
-      "tags": [
-        "bug",
-        "panne"
-      ],
+      "tags": ["critiques", "isolement"],
       "locale": "fr-FR"
     },
     {
-      "label": "Quand tu t’y prendras, rappelle-toi que une clé API expirée. Sinon, l’humeur en prend un coup.",
+      "label": "Une réglementation surprise va rendre ton business model obsolète instantanément.",
       "intensity": 3,
-      "tags": [
-        "budget",
-        "dépense"
-      ],
+      "tags": ["réglementation", "obsolescence"],
       "locale": "fr-FR"
     },
     {
-      "label": "Pas le jour pour improviser : une micro-erreur de calcul. Résultat : tu passes pour distrait.",
+      "label": "Ta paresse intellectuelle va te faire manquer une révolution dans ton domaine.",
       "intensity": 4,
-      "tags": [
-        "communication",
-        "malentendu"
-      ],
+      "tags": ["paresse", "révolution manquée"],
       "locale": "fr-FR"
     },
     {
-      "label": "Pas le jour pour improviser : un token expiré. Résultat : tu dois t’excuser.",
+      "label": "Ton ego surdimensionné va détruire les relations qui t'ont mené au succès.",
       "intensity": 5,
-      "tags": [
-        "stress",
-        "pression"
-      ],
+      "tags": ["ego", "destruction"],
       "locale": "fr-FR"
     },
     {
-      "label": "Si tu vas trop vite, un on-call agité. Mieux vaut simplifier le plan.",
+      "label": "Un virus informatique va corrompre des mois de travail non sauvegardé.",
       "intensity": 1,
-      "tags": [
-        "organisation",
-        "priorités"
-      ],
+      "tags": ["virus", "sauvegarde"],
       "locale": "fr-FR"
     },
     {
-      "label": "Si tu vas trop vite, un merge précipité. Mieux vaut tester sur un petit échantillon.",
+      "label": "Ton partenaire commercial va te poignarder dans le dos pour un gain dérisoire.",
       "intensity": 2,
-      "tags": [
-        "conflit",
-        "ego"
-      ],
+      "tags": ["partenaire", "trahison"],
       "locale": "fr-FR"
     },
     {
-      "label": "Risque de une pression inutile — tu t’énerves pour peu.",
+      "label": "Une fuite de données va exposer tes stratégies confidentielles à la concurrence.",
       "intensity": 3,
-      "tags": [
-        "qualité",
-        "erreur"
-      ],
+      "tags": ["fuite", "confidentialité"],
       "locale": "fr-FR"
     },
     {
-      "label": "Tu vas croiser une taxe oubliée. Conclusion : tu dois t’excuser.",
+      "label": "Ton burnout imminent va faire exploser ta productivité en plein vol.",
       "intensity": 4,
-      "tags": [
-        "workflow",
-        "blocage"
-      ],
+      "tags": ["burnout", "productivité"],
       "locale": "fr-FR"
     },
     {
-      "label": "Méfie-toi : un rollback douloureux, et tu dois t’excuser.",
+      "label": "Une seule décision stupide va anéantir une décennie de construction patiente.",
       "intensity": 5,
-      "tags": [
-        "risque",
-        "prudence"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Si tu vas trop vite, une exigence qui change. Mieux vaut tester sur un petit échantillon.",
-      "intensity": 1,
-      "tags": [
-        "retard",
-        "imprévu"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Méfie-toi : un retour client tardif, et tu rates un créneau précieux.",
-      "intensity": 2,
-      "tags": [
-        "bug",
-        "panne"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Le timing pique un peu : un runbook manquant. Et derrière, on te reproche un détail.",
-      "intensity": 3,
-      "tags": [
-        "budget",
-        "dépense"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Aujourd’hui, un livrable bâclé : tu passes pour distrait.",
-      "intensity": 4,
-      "tags": [
-        "communication",
-        "malentendu"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Aujourd’hui, un accès refusé : petit stress inutile.",
-      "intensity": 5,
-      "tags": [
-        "stress",
-        "pression"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Méfie-toi : un interlocuteur fermé, et ça dégrade la qualité.",
-      "intensity": 1,
-      "tags": [
-        "organisation",
-        "priorités"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Attention aux détails : une analyse incomplète. Solution : tester sur un petit échantillon.",
-      "intensity": 2,
-      "tags": [
-        "conflit",
-        "ego"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Si tu vas trop vite, une distraction bête. Mieux vaut garder une copie locale.",
-      "intensity": 3,
-      "tags": [
-        "qualité",
-        "erreur"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Pas le jour pour improviser : une micro-erreur de calcul. Résultat : l’humeur en prend un coup.",
-      "intensity": 4,
-      "tags": [
-        "workflow",
-        "blocage"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Quand tu t’y prendras, rappelle-toi que une métrique trompeuse. Sinon, ça met la pression pour rien.",
-      "intensity": 5,
-      "tags": [
-        "risque",
-        "prudence"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Risque de un agenda mal synchronisé — tu rates une fenêtre d’opportunité.",
-      "intensity": 1,
-      "tags": [
-        "retard",
-        "imprévu"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Risque de un KPI mal défini — tu t’énerves pour peu.",
-      "intensity": 2,
-      "tags": [
-        "bug",
-        "panne"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Si tu vas trop vite, un service en maintenance. Mieux vaut poser une question simple.",
-      "intensity": 3,
-      "tags": [
-        "budget",
-        "dépense"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Si tu vas trop vite, une surcharge de tickets. Mieux vaut noter tout de suite.",
-      "intensity": 4,
-      "tags": [
-        "communication",
-        "malentendu"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Aujourd’hui, une appli qui freeze : il faudra rattraper derrière.",
-      "intensity": 5,
-      "tags": [
-        "stress",
-        "pression"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Pas le jour pour improviser : un conflit passif-agressif. Résultat : tu dépenses plus que prévu.",
-      "intensity": 1,
-      "tags": [
-        "organisation",
-        "priorités"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Aujourd’hui, un délai irréaliste : tu dois t’excuser.",
-      "intensity": 2,
-      "tags": [
-        "conflit",
-        "ego"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Pas le jour pour improviser : un micro-drame d’ego. Résultat : tu rates une fenêtre d’opportunité.",
-      "intensity": 3,
-      "tags": [
-        "qualité",
-        "erreur"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Aujourd’hui, une confusion d’horaire : tu dois recommencer.",
-      "intensity": 4,
-      "tags": [
-        "workflow",
-        "blocage"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Aujourd’hui, une alerte ignorée. Le meilleur move : faire une pause courte.",
-      "intensity": 5,
-      "tags": [
-        "risque",
-        "prudence"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Aujourd’hui, un micro-drame d’ego : tu pédales dans la semoule.",
-      "intensity": 1,
-      "tags": [
-        "retard",
-        "imprévu"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Attention aux détails : un formulaire qui refuse d’envoyer. Solution : tester sur un petit échantillon.",
-      "intensity": 2,
-      "tags": [
-        "bug",
-        "panne"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Le timing pique un peu : un outil qui se met à jour au mauvais moment. Et derrière, malentendu garanti.",
-      "intensity": 3,
-      "tags": [
-        "budget",
-        "dépense"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Quand tu t’y prendras, rappelle-toi que un quiproquo en messages. Sinon, ça fait tache.",
-      "intensity": 4,
-      "tags": [
-        "communication",
-        "malentendu"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tu vas croiser un rollback douloureux. Conclusion : tu pédales dans la semoule.",
-      "intensity": 5,
-      "tags": [
-        "stress",
-        "pression"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Le timing pique un peu : un oubli de pièce jointe. Et derrière, tu rates un créneau précieux.",
-      "intensity": 1,
-      "tags": [
-        "organisation",
-        "priorités"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Pas le jour pour improviser : une tâche qui triple de taille. Résultat : l’humeur en prend un coup.",
-      "intensity": 2,
-      "tags": [
-        "conflit",
-        "ego"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Aujourd’hui, un indice trompeur : tu te disperses.",
-      "intensity": 3,
-      "tags": [
-        "qualité",
-        "erreur"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Pas le jour pour improviser : un loyer qui grimpe. Résultat : tu grignotes ton budget.",
-      "intensity": 4,
-      "tags": [
-        "workflow",
-        "blocage"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Le timing pique un peu : une pièce jointe lourde qui bloque. Et derrière, tu passes pour distrait.",
-      "intensity": 5,
-      "tags": [
-        "risque",
-        "prudence"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Attention aux détails : une clé égarée. Solution : sauvegarder avant d’envoyer.",
-      "intensity": 1,
-      "tags": [
-        "retard",
-        "imprévu"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Pas le jour pour improviser : un fournisseur silencieux. Résultat : l’humeur en prend un coup.",
-      "intensity": 2,
-      "tags": [
-        "bug",
-        "panne"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Pas le jour pour improviser : un manque de recul. Résultat : tu dois recommencer.",
-      "intensity": 3,
-      "tags": [
-        "budget",
-        "dépense"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Pas le jour pour improviser : une connexion capricieuse. Résultat : tu grignotes ton budget.",
-      "intensity": 4,
-      "tags": [
-        "communication",
-        "malentendu"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Quand tu t’y prendras, rappelle-toi que une estimation trop optimiste. Sinon, malentendu garanti.",
-      "intensity": 5,
-      "tags": [
-        "stress",
-        "pression"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Risque de un conflit de branches — tu grignotes ton budget.",
-      "intensity": 1,
-      "tags": [
-        "organisation",
-        "priorités"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Quand tu t’y prendras, rappelle-toi que un poste sans propriétaire. Sinon, malentendu garanti.",
-      "intensity": 2,
-      "tags": [
-        "conflit",
-        "ego"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Attention aux détails : une désactivation involontaire. Solution : faire une checklist.",
-      "intensity": 3,
-      "tags": [
-        "qualité",
-        "erreur"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Le timing pique un peu : un stakeholder indécis. Et derrière, tu rates un créneau précieux.",
-      "intensity": 4,
-      "tags": [
-        "workflow",
-        "blocage"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Si tu vas trop vite, un dashboard mal filtré. Mieux vaut tester sur un petit échantillon.",
-      "intensity": 5,
-      "tags": [
-        "risque",
-        "prudence"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Si tu vas trop vite, un fichier corrompu. Mieux vaut simplifier le plan.",
-      "intensity": 1,
-      "tags": [
-        "retard",
-        "imprévu"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Aujourd’hui, un commentaire injuste. Le meilleur move : noter tout de suite.",
-      "intensity": 2,
-      "tags": [
-        "bug",
-        "panne"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tu vas croiser une livraison perdue. Conclusion : tu te disperses.",
-      "intensity": 3,
-      "tags": [
-        "budget",
-        "dépense"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Méfie-toi : un on-call agité, et tu dois t’excuser.",
-      "intensity": 4,
-      "tags": [
-        "communication",
-        "malentendu"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Attention aux détails : une tâche qui triple de taille. Solution : poser une question simple.",
-      "intensity": 5,
-      "tags": [
-        "stress",
-        "pression"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Méfie-toi : un loyer qui grimpe, et tu dois recommencer.",
-      "intensity": 1,
-      "tags": [
-        "organisation",
-        "priorités"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Le timing pique un peu : un quiproquo en messages. Et derrière, il faudra rattraper derrière.",
-      "intensity": 2,
-      "tags": [
-        "conflit",
-        "ego"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Risque de un agenda mal synchronisé — ça dégrade la qualité.",
-      "intensity": 3,
-      "tags": [
-        "qualité",
-        "erreur"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Attention aux détails : un dossier mal nommé. Solution : rester factuel.",
-      "intensity": 4,
-      "tags": [
-        "workflow",
-        "blocage"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Si tu vas trop vite, une alerte ignorée. Mieux vaut rester factuel.",
-      "intensity": 5,
-      "tags": [
-        "risque",
-        "prudence"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Aujourd’hui, une relance oubliée : tu dois t’excuser.",
-      "intensity": 1,
-      "tags": [
-        "retard",
-        "imprévu"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Aujourd’hui, un merge précipité : tu grignotes ton budget.",
-      "intensity": 2,
-      "tags": [
-        "bug",
-        "panne"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Méfie-toi : une réunion qui s’éternise, et ça bloque la suite.",
-      "intensity": 3,
-      "tags": [
-        "budget",
-        "dépense"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tu vas croiser une désactivation involontaire. Conclusion : tu dois t’excuser.",
-      "intensity": 4,
-      "tags": [
-        "communication",
-        "malentendu"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Pas le jour pour improviser : un commentaire injuste. Résultat : tu te disperses.",
-      "intensity": 5,
-      "tags": [
-        "stress",
-        "pression"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Si tu vas trop vite, une coupure d’électricité. Mieux vaut prévenir à l’avance.",
-      "intensity": 1,
-      "tags": [
-        "organisation",
-        "priorités"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tu vas croiser un poste sans propriétaire. Conclusion : malentendu garanti.",
-      "intensity": 2,
-      "tags": [
-        "conflit",
-        "ego"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Aujourd’hui, une pression inutile : tu dépenses plus que prévu.",
-      "intensity": 3,
-      "tags": [
-        "qualité",
-        "erreur"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Pas le jour pour improviser : un conflit passif-agressif. Résultat : petit stress inutile.",
-      "intensity": 4,
-      "tags": [
-        "workflow",
-        "blocage"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Le timing pique un peu : une dépendance cassée. Et derrière, tu dois recommencer.",
-      "intensity": 5,
-      "tags": [
-        "risque",
-        "prudence"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Risque de une sauvegarde manquante — tu passes pour distrait.",
-      "intensity": 1,
-      "tags": [
-        "retard",
-        "imprévu"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tu vas croiser un bug récalcitrant. Conclusion : tu pédales dans la semoule.",
-      "intensity": 2,
-      "tags": [
-        "bug",
-        "panne"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Le timing pique un peu : une pièce jointe lourde qui bloque. Et derrière, tu rates un créneau précieux.",
-      "intensity": 3,
-      "tags": [
-        "budget",
-        "dépense"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Aujourd’hui, un poste sans propriétaire. Le meilleur move : rester factuel.",
-      "intensity": 4,
-      "tags": [
-        "communication",
-        "malentendu"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tu vas croiser une incohérence de chiffres. Conclusion : perte de temps.",
-      "intensity": 5,
-      "tags": [
-        "stress",
-        "pression"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Risque de une relance oubliée — malentendu garanti.",
-      "intensity": 1,
-      "tags": [
-        "organisation",
-        "priorités"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Aujourd’hui, un oubli de pièce jointe. Le meilleur move : garder une copie locale.",
-      "intensity": 2,
-      "tags": [
-        "conflit",
-        "ego"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Tu vas croiser un support client aux abonnés absents. Conclusion : tu dois recommencer.",
-      "intensity": 3,
-      "tags": [
-        "qualité",
-        "erreur"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Aujourd’hui, un appel manqué : tu dépenses plus que prévu.",
-      "intensity": 4,
-      "tags": [
-        "workflow",
-        "blocage"
-      ],
-      "locale": "fr-FR"
-    },
-    {
-      "label": "Attention aux détails : une confusion de rôles. Solution : recaler les priorités.",
-      "intensity": 5,
-      "tags": [
-        "risque",
-        "prudence"
-      ],
+      "tags": ["décision fatale", "anéantissement"],
       "locale": "fr-FR"
     }
   ]
